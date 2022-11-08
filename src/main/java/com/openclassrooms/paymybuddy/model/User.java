@@ -1,6 +1,7 @@
 package com.openclassrooms.paymybuddy.model;
 
 import lombok.*;
+import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @EqualsAndHashCode
+@Validated
 public class User {
 
     @Id

@@ -20,4 +20,8 @@ public class UserRelations {
     private Long userId;
     private Long friendId;
 
+    public UserRelations(Long userId, Long friendId) {
+        this.userId = userId;
+        this.friendId = friendId;
+    }
 }
