@@ -19,6 +19,4 @@ public class AppAccount {
     private Double sold;
     private Long userId;
 
-
-
 }
