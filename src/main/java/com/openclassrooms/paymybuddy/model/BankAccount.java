@@ -1,8 +1,6 @@
 package com.openclassrooms.paymybuddy.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,6 +9,8 @@ import javax.persistence.*;
 @Getter
 @Setter
 @EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 public class BankAccount {
 
     @Id
@@ -23,6 +23,24 @@ public class BankAccount {
     private Integer bankCode;
     private Integer counterCode;
     private Integer ribKey;
-    private Long userId;
+    private String username;
 
+    public BankAccount(String accountNumber, String iban, String swift, Integer bankCode, Integer counterCode, Integer ribKey) {
+        this.accountNumber = accountNumber;
+        this.iban = iban;
+        this.swift = swift;
+        this.bankCode = bankCode;
+        this.counterCode = counterCode;
+        this.ribKey = ribKey;
+    }
+
+    public BankAccount(String accountNumber, String iban, String swift, Integer bankCode, Integer counterCode, Integer ribKey, String username) {
+        this.accountNumber = accountNumber;
+        this.iban = iban;
+        this.swift = swift;
+        this.bankCode = bankCode;
+        this.counterCode = counterCode;
+        this.ribKey = ribKey;
+        this.username = username;
+    }
 }
