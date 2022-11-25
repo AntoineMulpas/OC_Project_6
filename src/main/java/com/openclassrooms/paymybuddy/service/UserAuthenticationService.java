@@ -1,8 +1,10 @@
 package com.openclassrooms.paymybuddy.service;
 
-import com.openclassrooms.paymybuddy.model.UserAuth;
+import com.openclassrooms.paymybuddy.model.UserAuthentication;
 import com.openclassrooms.paymybuddy.repository.UserAuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class UserAuthenticationService implements UserDetailsService {
 
     private final UserAuthRepository userAuthRepository;
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
     @Autowired
     public UserAuthenticationService(UserAuthRepository userAuthRepository, PasswordEncoder passwordEncoder) {
         this.userAuthRepository = userAuthRepository;
@@ -30,12 +32,13 @@ public class UserAuthenticationService implements UserDetailsService {
     }
 
 
-    public UserAuth saveAUser(UserAuth userAuth) {
-            if (userAuth.getUsername() != null && userAuth.getPassword() != null) {
-                if (userAuthRepository.findByUsernameEquals(userAuth.getUsername()).isEmpty()) {
-                    UserAuth userToSave = new UserAuth(
-                            userAuth.getUsername(),
-                            passwordEncoder.encode(userAuth.getPassword()));
+    public UserAuthentication saveAUser(UserAuthentication user) {
+            if (!user.getUsername().isEmpty() && !user.getPassword().isEmpty()) {
+                if (userAuthRepository.findByUsernameEquals(user.getUsername()).isEmpty()) {
+                    UserAuthentication userToSave = new UserAuthentication(
+                            user.getUsername(),
+                            passwordEncoder.encode(user.getPassword())
+                            );
                     userAuthRepository.save(userToSave);
                     return userToSave;
                 } else {
@@ -45,4 +48,9 @@ public class UserAuthenticationService implements UserDetailsService {
                 throw new NullPointerException();
             }
     }
+
+    public Authentication getCurrentUser() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
+
 }

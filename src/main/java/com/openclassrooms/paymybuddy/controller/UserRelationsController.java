@@ -19,9 +19,9 @@ public class UserRelationsController {
     }
 
     @GetMapping("/list")
-    public List <UserRelations> getListOfUserRelations(@RequestParam Long id) {
+    public List <UserRelations> getListOfUserRelations() {
         try {
-            return userRelationsService.getListOfUserRelations(id);
+            return userRelationsService.getListOfUserRelations();
         } catch (RuntimeException e) {
             return null;
         }

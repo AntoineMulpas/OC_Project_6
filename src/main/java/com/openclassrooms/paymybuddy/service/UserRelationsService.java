@@ -15,8 +15,8 @@ public class UserRelationsService {
         this.userRelationsRepository = userRelationsRepository;
     }
 
-    public List <UserRelations> getListOfUserRelations(Long id) {
-        return userRelationsRepository.findAllByUserIdEquals(id);
+    public List <UserRelations> getListOfUserRelations() {
+        return userRelationsRepository.findAllByUserIdEquals(1L);
     }
 
     public UserRelations addAFriend (Long userId, Long friendId) {

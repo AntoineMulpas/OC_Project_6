@@ -1,5 +1,6 @@
 package com.openclassrooms.paymybuddy.model;
 
+
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +15,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class UserAuth implements UserDetails {
+public class UserAuthentication implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -51,8 +52,9 @@ public class UserAuth implements UserDetails {
         return true;
     }
 
-    public UserAuth(String username, String password) {
+    public UserAuthentication(String username, String password) {
         this.username = username;
         this.password = password;
     }
 }
+

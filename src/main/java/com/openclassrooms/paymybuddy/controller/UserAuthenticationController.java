@@ -1,6 +1,6 @@
 package com.openclassrooms.paymybuddy.controller;
 
-import com.openclassrooms.paymybuddy.model.UserAuth;
+import com.openclassrooms.paymybuddy.model.UserAuthentication;
 import com.openclassrooms.paymybuddy.service.UserAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,11 +20,10 @@ public class UserAuthenticationController {
     }
 
     @PostMapping("/add")
-    public UserAuth saveANewUser(@RequestBody UserAuth userAuth) {
+    public UserAuthentication saveANewUser(@RequestBody UserAuthentication userAuth) {
         try {
             return userAuthenticationService.saveAUser(userAuth);
         } catch (RuntimeException e) {
-            System.out.println(e);
             return null;
         }
     }
