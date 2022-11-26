@@ -11,10 +11,12 @@ import java.util.Optional;
 public class AppAccountService {
 
     private final AppAccountRepository appAccountRepository;
+    private final IdOfUserAuthenticationService idOfUserAuthenticationService;
 
     @Autowired
-    public AppAccountService(AppAccountRepository appAccountRepository) {
+    public AppAccountService(AppAccountRepository appAccountRepository, IdOfUserAuthenticationService idOfUserAuthenticationService) {
         this.appAccountRepository = appAccountRepository;
+        this.idOfUserAuthenticationService = idOfUserAuthenticationService;
     }
 
     public Double getSoldOfAccount(Long id) {
@@ -23,6 +25,20 @@ public class AppAccountService {
             return appAccount.get().getSold();
         } else {
             throw new RuntimeException("An error occurred.");
+        }
+    }
+
+    public AppAccount createAppAccount() {
+        try {
+            Long userId = idOfUserAuthenticationService.getUserId();
+            AppAccount appAccount = new AppAccount(
+                    0.0,
+                    userId
+            );
+            appAccountRepository.save(appAccount);
+            return appAccount;
+        } catch (RuntimeException e) {
+            return null;
         }
     }
 }

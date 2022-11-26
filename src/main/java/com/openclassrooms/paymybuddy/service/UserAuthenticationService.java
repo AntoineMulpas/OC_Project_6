@@ -3,8 +3,6 @@ package com.openclassrooms.paymybuddy.service;
 import com.openclassrooms.paymybuddy.model.UserAuthentication;
 import com.openclassrooms.paymybuddy.repository.UserAuthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,10 +14,12 @@ public class UserAuthenticationService implements UserDetailsService {
 
     private final UserAuthRepository userAuthRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AppAccountService appAccountService;
     @Autowired
-    public UserAuthenticationService(UserAuthRepository userAuthRepository, PasswordEncoder passwordEncoder) {
+    public UserAuthenticationService(UserAuthRepository userAuthRepository, PasswordEncoder passwordEncoder, AppAccountService appAccountService) {
         this.userAuthRepository = userAuthRepository;
         this.passwordEncoder = passwordEncoder;
+        this.appAccountService = appAccountService;
     }
 
     @Override
@@ -40,6 +40,7 @@ public class UserAuthenticationService implements UserDetailsService {
                             passwordEncoder.encode(user.getPassword())
                             );
                     userAuthRepository.save(userToSave);
+                    appAccountService.createAppAccount();
                     return userToSave;
                 } else {
                     throw new RuntimeException("Username already used.");
@@ -48,9 +49,4 @@ public class UserAuthenticationService implements UserDetailsService {
                 throw new NullPointerException();
             }
     }
-
-    public Authentication getCurrentUser() {
-        return SecurityContextHolder.getContext().getAuthentication();
-    }
-
 }

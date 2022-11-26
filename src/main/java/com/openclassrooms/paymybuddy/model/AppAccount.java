@@ -19,4 +19,8 @@ public class AppAccount {
     private Double sold;
     private Long userId;
 
+    public AppAccount(Double sold, Long userId) {
+        this.sold = sold;
+        this.userId = userId;
+    }
 }

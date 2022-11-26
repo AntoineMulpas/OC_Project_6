@@ -19,11 +19,13 @@ class AppAccountServiceTest {
     private AppAccountService underTest;
     @Mock
     private AppAccountRepository appAccountRepository;
+    @Mock
+    private IdOfUserAuthenticationService idOfUserAuthenticationService;
 
 
     @BeforeEach
     void setUp() {
-        underTest = new AppAccountService(appAccountRepository);
+        underTest = new AppAccountService(appAccountRepository, idOfUserAuthenticationService);
     }
 
     @Test
