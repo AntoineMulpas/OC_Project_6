@@ -28,12 +28,11 @@ public class AppAccountService {
         }
     }
 
-    public AppAccount createAppAccount() {
+    public AppAccount createAppAccount(Long id) {
         try {
-            Long userId = idOfUserAuthenticationService.getUserId();
             AppAccount appAccount = new AppAccount(
                     0.0,
-                    userId
+                    id
             );
             appAccountRepository.save(appAccount);
             return appAccount;

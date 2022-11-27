@@ -27,7 +27,6 @@ class UserRelationsServiceTest {
     }
 
     @Test
-    @Disabled
     void getListOfUserRelations() {
         List <UserRelations> listOfUserRelations = underTest.getListOfUserRelations();
         assertEquals(0 ,listOfUserRelations.size());

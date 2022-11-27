@@ -39,8 +39,8 @@ public class UserAuthenticationService implements UserDetailsService {
                             user.getUsername(),
                             passwordEncoder.encode(user.getPassword())
                             );
-                    userAuthRepository.save(userToSave);
-                    appAccountService.createAppAccount();
+                    UserAuthentication savedUser = userAuthRepository.save(userToSave);
+                    appAccountService.createAppAccount(savedUser.getId());
                     return userToSave;
                 } else {
                     throw new RuntimeException("Username already used.");
