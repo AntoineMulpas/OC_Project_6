@@ -32,7 +32,7 @@ public class UserRelationsController {
           @RequestBody UserRelations userRelations
     ) {
         try {
-            return userRelationsService.addAFriend(userRelations.getUserId(), userRelations.getFriendId());
+            return userRelationsService.addAFriend(userRelations.getFriendId());
         } catch (RuntimeException e) {
             return null;
         }

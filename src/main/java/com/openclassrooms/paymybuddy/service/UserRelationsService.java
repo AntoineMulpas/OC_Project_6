@@ -10,17 +10,20 @@ import java.util.List;
 public class UserRelationsService {
 
     private final UserRelationsRepository userRelationsRepository;
+    private final IdOfUserAuthenticationService idOfUserAuthenticationService;
 
-    public UserRelationsService(UserRelationsRepository userRelationsRepository) {
+    public UserRelationsService(UserRelationsRepository userRelationsRepository, IdOfUserAuthenticationService idOfUserAuthenticationService) {
         this.userRelationsRepository = userRelationsRepository;
+        this.idOfUserAuthenticationService = idOfUserAuthenticationService;
     }
 
     public List <UserRelations> getListOfUserRelations() {
         return userRelationsRepository.findAllByUserIdEquals(1L);
     }
 
-    public UserRelations addAFriend (Long userId, Long friendId) {
+    public UserRelations addAFriend (Long friendId) {
         try {
+            Long userId = idOfUserAuthenticationService.getUserId();
             UserRelations userRelations = new UserRelations(userId, friendId);
             userRelationsRepository.save(userRelations);
             return userRelations;

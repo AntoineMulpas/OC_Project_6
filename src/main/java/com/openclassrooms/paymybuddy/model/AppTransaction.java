@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Entity(name = "AppTransaction")
 @Table(name = "app_transaction")
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -23,4 +22,15 @@ public class AppTransaction {
     private LocalDateTime localDateTime;
     private Double amount;
 
+    public AppTransaction(Long receiverId, Double amount) {
+        this.receiverId = receiverId;
+        this.amount = amount;
+    }
+
+    public AppTransaction(Long senderId, Long receiverId, LocalDateTime localDateTime, Double amount) {
+        this.senderId = senderId;
+        this.receiverId = receiverId;
+        this.localDateTime = localDateTime;
+        this.amount = amount;
+    }
 }

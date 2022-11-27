@@ -3,7 +3,6 @@ package com.openclassrooms.paymybuddy.service;
 import com.openclassrooms.paymybuddy.model.UserRelations;
 import com.openclassrooms.paymybuddy.repository.UserRelationsRepository;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -20,10 +19,12 @@ class UserRelationsServiceTest {
     private UserRelationsService underTest;
     @Mock
     private UserRelationsRepository userRelationsRepository;
+    @Mock
+    private IdOfUserAuthenticationService idOfUserAuthenticationService;
 
     @BeforeEach
     void setUp() {
-        underTest = new UserRelationsService(userRelationsRepository);
+        underTest = new UserRelationsService(userRelationsRepository, idOfUserAuthenticationService);
     }
 
     @Test
@@ -34,7 +35,7 @@ class UserRelationsServiceTest {
 
     @Test
     void addAFriend() {
-        UserRelations addAFriend = underTest.addAFriend(1L, 2L);
+        UserRelations addAFriend = underTest.addAFriend(2L);
         UserRelations toCompare = new UserRelations(1L, 1L, 2L);
         assertEquals(addAFriend.getUserId(), toCompare.getUserId());
 
