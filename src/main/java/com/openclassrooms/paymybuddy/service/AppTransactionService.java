@@ -21,17 +21,21 @@ public class AppTransactionService {
 
 
     public AppTransaction makeANewAppTransaction(AppTransaction appTransaction) {
-            if (appTransaction.getReceiverId() != null && appTransaction.getAmount() != null) {
-                Long senderId = idOfUserAuthenticationService.getUserId();
-                AppTransaction transactionToSave = new AppTransaction(
-                        senderId,
-                        appTransaction.getReceiverId(),
-                        LocalDateTime.now(),
-                        appTransaction.getAmount()
-                );
-                return appTransactionRepository.save(transactionToSave);
+            if (appTransaction.getReceiverId() != null && appTransaction.getAmount() != null && appTransaction.getAmount() > 0) {
+                if (idOfUserAuthenticationService.userIdExists(appTransaction.getReceiverId())) {
+                    Long senderId = idOfUserAuthenticationService.getUserId();
+                    AppTransaction transactionToSave = new AppTransaction(
+                            senderId,
+                            appTransaction.getReceiverId(),
+                            LocalDateTime.now(),
+                            appTransaction.getAmount()
+                    );
+                    return appTransactionRepository.save(transactionToSave);
+                } else {
+                    throw new RuntimeException("Receiver id: " + appTransaction.getReceiverId() + " does not exist.");
+                }
             } else {
-                throw new RuntimeException();
+                throw new RuntimeException("An error occurred.");
             }
     }
 }

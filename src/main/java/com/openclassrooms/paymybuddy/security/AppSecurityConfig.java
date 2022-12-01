@@ -19,6 +19,8 @@ public class AppSecurityConfig {
         return http
                 .csrf().disable()
                 .authorizeHttpRequests()
+                    .antMatchers(HttpMethod.GET, "/login").permitAll()
+                    .antMatchers(HttpMethod.GET, "/signup").permitAll()
                     .antMatchers(HttpMethod.POST, "/api/v1/authentication/add").permitAll()
                 .anyRequest().authenticated()
                 .and()

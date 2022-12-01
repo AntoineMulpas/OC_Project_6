@@ -27,14 +27,23 @@ class AppTransactionServiceTest {
 
     @Test
     void makeANewAppTransaction() {
+        when(idOfUserAuthenticationService.userIdExists(2L)).thenReturn(true);
         when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
         AppTransaction appTransaction = new AppTransaction(2L, 10.3);
         underTest.makeANewAppTransaction(appTransaction);
     }
 
     @Test
-    void makeANewAppTransactionShowThrow() {
+    void makeANewAppTransactionShowThrowWhenReceiverIdIsNull() {
         AppTransaction appTransaction = new AppTransaction(null, 10.3);
         assertThrows(RuntimeException.class, () -> underTest.makeANewAppTransaction(appTransaction));
+    }
+
+
+    @Test
+    void makeANewAppTransactionShouldThrowWhenAmountIsLessThanOne() {
+        AppTransaction appTransaction = new AppTransaction(1L, -1.0);
+        assertThrows(RuntimeException.class, () -> underTest.makeANewAppTransaction(appTransaction));
+
     }
 }

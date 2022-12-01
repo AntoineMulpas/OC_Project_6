@@ -18,6 +18,7 @@ public class IdOfUserAuthenticationService {
         this.userAuthRepository = userAuthRepository;
     }
 
+    ////Retirer cette méthode, taper depuis le context directement
     public Long getUserId() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional <UserAuthentication> userAuthentication = userAuthRepository.findByUsernameEquals(username);
@@ -26,6 +27,10 @@ public class IdOfUserAuthenticationService {
         } else {
             throw new RuntimeException("User does not exist.");
         }
+    }
+
+    public Boolean userIdExists(Long userId) {
+        return userAuthRepository.existsById(userId);
     }
 
 }
