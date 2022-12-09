@@ -4,7 +4,6 @@ import com.openclassrooms.paymybuddy.service.AppAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,9 +19,8 @@ public class AppAccountController {
 
     @GetMapping("/sold")
     public Double getSoldOfAccount(
-            @RequestParam Long id
     ) {
-        return appAccountService.getSoldOfAccount(id);
+        return appAccountService.getSoldOfAccount();
     }
 
 }

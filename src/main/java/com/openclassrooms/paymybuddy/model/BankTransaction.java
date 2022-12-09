@@ -21,6 +21,14 @@ public class BankTransaction {
     private Long userId;
     private LocalDateTime date;
     private Double amount;
-    private Character operation;
 
+    public BankTransaction(Long userId, LocalDateTime date, Double amount) {
+        this.userId = userId;
+        this.date = date;
+        this.amount = amount;
+    }
+
+    public BankTransaction(Double amount) {
+        this.amount = amount;
+    }
 }

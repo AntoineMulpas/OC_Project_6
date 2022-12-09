@@ -2,10 +2,11 @@ package com.openclassrooms.paymybuddy.service;
 
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -17,7 +18,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public String getCurrentUser() {
+    private String getCurrentUser() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
@@ -39,6 +40,16 @@ public class UserService {
             return userToSave;
         } else {
             throw new RuntimeException("User already exists.");
+        }
+    }
+
+    public User getCurrentUserInformation() {
+        String currentUser = getCurrentUser();
+        Optional <User> userByUserAuthenticationEquals = userRepository.findUserByUserAuthenticationEquals(currentUser);
+        if (userByUserAuthenticationEquals.isPresent()) {
+            return userByUserAuthenticationEquals.get();
+        } else {
+            throw new UsernameNotFoundException("User not found.");
         }
     }
 }

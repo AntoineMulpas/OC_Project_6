@@ -1,0 +1,112 @@
+#body {
+    margin: 0;
+}
+
+/*
+//// LOGIN PAGE
+///
+*/
+
+.container {
+    margin: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    padding: 3em;
+}
+
+.form-signin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.login-title {
+    color: white;
+    display: flex;
+    justify-content: center;
+    font-size: 1em;
+    padding: 5px;
+    border-radius: 10px;
+    width: 50%;
+    background-color: forestgreen;
+}
+
+.login-element {
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.label-remember {
+    margin-left: 5px;
+}
+
+.login-button {
+    margin-top: 2em;
+}
+
+
+/*
+//// SIGN UP PAGE
+ */
+
+.label {
+    margin: 1px;
+}
+
+/*
+////// HOME PAGE
+ */
+
+.home-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.menu {
+    padding: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.company {
+    background-color: forestgreen;
+    color: white;
+    padding: 0.2em;
+    border-radius: 10px;
+}
+
+.menu-items {
+    display: flex;
+}
+
+.menu-item {
+    margin-left: 35px;
+}
+.navigation {
+    height: 2.5em;
+    font-weight: bold;
+    width: 100%;
+    background-color: lightgrey;
+}
+
+.nav-item {
+    margin: 4px;
+}
+
+.main-content {
+    display: flex;
+    justify-content: center;
+}
+
+.main-content-card {
+    margin-top: 10%;
+}

@@ -19,25 +19,22 @@ public class AppAccountService {
         this.idOfUserAuthenticationService = idOfUserAuthenticationService;
     }
 
-    public Double getSoldOfAccount(Long id) {
-        Optional <AppAccount> appAccount = appAccountRepository.findById(id);
+    public Double getSoldOfAccount() {
+        Long id = idOfUserAuthenticationService.getUserId();
+        Optional <AppAccount> appAccount = appAccountRepository.findAppAccountByUserIdEquals(id);
         if (appAccount.isPresent()) {
             return appAccount.get().getSold();
         } else {
-            throw new RuntimeException("An error occurred.");
+            throw new RuntimeException("An error occurred while fetching the sold.");
         }
     }
 
     public AppAccount createAppAccount(Long id) {
-        try {
             AppAccount appAccount = new AppAccount(
                     0.0,
                     id
             );
             appAccountRepository.save(appAccount);
             return appAccount;
-        } catch (RuntimeException e) {
-            return null;
-        }
     }
 }

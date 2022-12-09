@@ -37,7 +37,7 @@ class UserRelationsServiceTest {
     void addAFriend() {
         UserRelations addAFriend = underTest.addAFriend(2L);
         UserRelations toCompare = new UserRelations(1L, 1L, 2L);
-        assertEquals(addAFriend.getUserId(), toCompare.getUserId());
+        assertEquals(addAFriend.getFriendId(), toCompare.getFriendId());
 
     }
 

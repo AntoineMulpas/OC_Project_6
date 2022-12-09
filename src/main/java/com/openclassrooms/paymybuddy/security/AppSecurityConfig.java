@@ -16,15 +16,18 @@ public class AppSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        //return http.authorizeHttpRequests().anyRequest().permitAll().and().build();
         return http
                 .csrf().disable()
+                .cors().disable()
                 .authorizeHttpRequests()
-                    .antMatchers(HttpMethod.GET, "/login").permitAll()
-                    .antMatchers(HttpMethod.GET, "/signup").permitAll()
+                    .antMatchers("/css/**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/login", "/signup").permitAll()
                     .antMatchers(HttpMethod.POST, "/api/v1/authentication/add").permitAll()
                 .anyRequest().authenticated()
                 .and()
                     .formLogin()
+                    .loginPage("/login")
                     .defaultSuccessUrl("/home")
                 .and()
                 .build();

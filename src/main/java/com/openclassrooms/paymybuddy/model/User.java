@@ -33,4 +33,10 @@ public class User {
         this.userAuthentication = userAuthentication;
         this.birthday = birthday;
     }
+
+    public User(String firstName, String lastName, LocalDate birthday) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthday = birthday;
+    }
 }
