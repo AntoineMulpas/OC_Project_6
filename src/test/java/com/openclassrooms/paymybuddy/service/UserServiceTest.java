@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -83,4 +84,35 @@ class UserServiceTest {
 
         assertThrows(RuntimeException.class, () -> underTest.saveInformationOfAUser(user));
     }
+
+    @Test
+    void getCurrentUserInformation() {
+    }
+
+    @Test
+    void getUserInformation() {
+        Optional <User> optionalUser = Optional.of(
+                new User(
+                        1L,
+                        "Antoine",
+                        "Antoine",
+                        "Antoine",
+                        LocalDate.now()));
+        when(userRepository.findById(any())).thenReturn(
+                optionalUser);
+
+        User userInformationToAssert = underTest.getUserInformation(1L);
+        assertEquals(optionalUser.get().getFirstName(), userInformationToAssert.getFirstName());
+    }
+
+    @Test
+    void getUserInformationShowThrow() {
+        Optional <User> optionalUser = Optional.empty();
+        when(userRepository.findById(any())).thenReturn(
+                optionalUser);
+        assertThrows(UsernameNotFoundException.class, () -> underTest.getUserInformation(1L));
+    }
+
+
+
 }

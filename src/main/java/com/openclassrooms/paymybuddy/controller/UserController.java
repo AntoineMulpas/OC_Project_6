@@ -1,6 +1,7 @@
 package com.openclassrooms.paymybuddy.controller;
 
 import com.openclassrooms.paymybuddy.model.User;
+import com.openclassrooms.paymybuddy.model.UserDTO;
 import com.openclassrooms.paymybuddy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/information")
-    public User getCurrentUserInformation() {
+    public UserDTO getCurrentUserInformation() {
         return userService.getCurrentUserInformation();
     }
 }

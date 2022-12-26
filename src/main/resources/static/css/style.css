@@ -70,6 +70,11 @@
     flex-direction: column;
 }
 
+.menu-container {
+    display: flex;
+    flex-direction: column;
+}
+
 .menu {
     padding: 10px;
     width: 100%;
@@ -91,6 +96,11 @@
 .menu-item {
     margin-left: 35px;
 }
+
+.menu-item:hover {
+    font-weight: bold;
+}
+
 .navigation {
     height: 2.5em;
     font-weight: bold;
@@ -109,4 +119,42 @@
 
 .main-content-card {
     margin-top: 10%;
+}
+
+/*
+//// FRIEND LIST
+ */
+
+.friendList-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.friendList {
+    width: 60%;
+}
+
+.addFriendButton {
+    margin-top: 1em;
+    width: 4em;
+}
+
+
+/*
+///////// MY PROFILE
+ */
+
+.myInformation {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-information {
+    display: flex;
+    flex-direction: column;
 }

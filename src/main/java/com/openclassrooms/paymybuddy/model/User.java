@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @EqualsAndHashCode
+@ToString
 public class User {
 
     @Id

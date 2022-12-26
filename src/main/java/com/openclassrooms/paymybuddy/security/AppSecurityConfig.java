@@ -13,7 +13,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class AppSecurityConfig {
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         //return http.authorizeHttpRequests().anyRequest().permitAll().and().build();
@@ -30,9 +29,12 @@ public class AppSecurityConfig {
                     .loginPage("/login")
                     .defaultSuccessUrl("/home")
                 .and()
+                .sessionManagement(session -> session
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(true))
                 .build();
-    }
 
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

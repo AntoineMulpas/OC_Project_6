@@ -1,9 +1,11 @@
 package com.openclassrooms.paymybuddy.controller;
 
 import com.openclassrooms.paymybuddy.model.UserRelations;
+import com.openclassrooms.paymybuddy.model.UserRelationsDTO;
 import com.openclassrooms.paymybuddy.service.UserRelationsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +21,7 @@ public class UserRelationsController {
     }
 
     @GetMapping("/list")
-    public List <UserRelations> getListOfUserRelations() {
+    public List <UserRelationsDTO> getListOfUserRelations() {
         try {
             return userRelationsService.getListOfUserRelations();
         } catch (RuntimeException e) {
@@ -28,23 +30,24 @@ public class UserRelationsController {
     }
 
     @PostMapping("/add")
-    public UserRelations addAFriend(
-          @RequestBody UserRelations userRelations
+    public ResponseEntity<String> addAFriend(
+          @RequestParam String email
     ) {
         try {
-            return userRelationsService.addAFriend(userRelations.getFriendId());
-        } catch (RuntimeException e) {
-            return null;
+            userRelationsService.addAFriend(email);
+            return ResponseEntity.status(200).body("Relation added successfully.");
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("User not found.");
         }
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteAFriend(
-            @RequestBody UserRelations userRelations
+            @RequestParam Long friendId
     ) {
         try {
-            userRelationsService.deleteAFriend(userRelations.getUserId(), userRelations.getFriendId());
-            return ResponseEntity.ok().body("Friend with id: " + userRelations.getFriendId() + " has been deleted.");
+            userRelationsService.deleteAFriend(friendId);
+            return ResponseEntity.ok().body("Friend with id: " + friendId + " has been deleted.");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("An error occurred while deleting friend.");
         }

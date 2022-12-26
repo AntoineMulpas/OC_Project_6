@@ -1,12 +1,12 @@
 package com.openclassrooms.paymybuddy.service;
 
 import com.openclassrooms.paymybuddy.model.User;
+import com.openclassrooms.paymybuddy.model.UserDTO;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -43,13 +43,26 @@ public class UserService {
         }
     }
 
-    public User getCurrentUserInformation() {
+    public UserDTO getCurrentUserInformation() {
         String currentUser = getCurrentUser();
         Optional <User> userByUserAuthenticationEquals = userRepository.findUserByUserAuthenticationEquals(currentUser);
         if (userByUserAuthenticationEquals.isPresent()) {
-            return userByUserAuthenticationEquals.get();
+            return new UserDTO(
+                    userByUserAuthenticationEquals.get().getFirstName(),
+                    userByUserAuthenticationEquals.get().getLastName(),
+                    userByUserAuthenticationEquals.get().getBirthday(),
+                    currentUser);
         } else {
             throw new UsernameNotFoundException("User not found.");
+        }
+    }
+
+    public User getUserInformation(Long id) {
+        Optional <User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new UsernameNotFoundException("User with id: " + id + " not found.");
         }
     }
 }

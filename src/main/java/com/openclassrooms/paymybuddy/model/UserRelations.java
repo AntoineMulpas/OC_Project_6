@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @EqualsAndHashCode
+@ToString
 public class UserRelations {
 
     @Id
@@ -22,6 +23,10 @@ public class UserRelations {
 
     public UserRelations(Long userId, Long friendId) {
         this.userId = userId;
+        this.friendId = friendId;
+    }
+
+    public UserRelations(Long friendId) {
         this.friendId = friendId;
     }
 }
