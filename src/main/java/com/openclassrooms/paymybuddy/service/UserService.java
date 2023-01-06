@@ -46,15 +46,17 @@ public class UserService {
     public UserDTO getCurrentUserInformation() {
         String currentUser = getCurrentUser();
         Optional <User> userByUserAuthenticationEquals = userRepository.findUserByUserAuthenticationEquals(currentUser);
-        if (userByUserAuthenticationEquals.isPresent()) {
-            return new UserDTO(
-                    userByUserAuthenticationEquals.get().getFirstName(),
-                    userByUserAuthenticationEquals.get().getLastName(),
-                    userByUserAuthenticationEquals.get().getBirthday(),
-                    currentUser);
-        } else {
-            throw new UsernameNotFoundException("User not found.");
-        }
+        return userByUserAuthenticationEquals.map(user -> new UserDTO(
+                user.getFirstName(),
+                user.getLastName(),
+                user.getBirthday(),
+                currentUser)).orElseGet(UserDTO::new);
+    }
+
+    public Boolean isCurrentUserInformationSaved() {
+        String currentUser = getCurrentUser();
+        Optional <User> userByUserAuthenticationEquals = userRepository.findUserByUserAuthenticationEquals(currentUser);
+        return userByUserAuthenticationEquals.isPresent();
     }
 
     public User getUserInformation(Long id) {
@@ -64,5 +66,10 @@ public class UserService {
         } else {
             throw new UsernameNotFoundException("User with id: " + id + " not found.");
         }
+    }
+
+    public User getUserInformationByUsername(String friendUsername) {
+        Optional <User> userByUserAuthenticationEquals = userRepository.findUserByUserAuthenticationEquals(friendUsername);
+        return userByUserAuthenticationEquals.orElse(null);
     }
 }

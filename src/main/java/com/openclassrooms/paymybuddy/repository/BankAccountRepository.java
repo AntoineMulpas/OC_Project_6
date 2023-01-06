@@ -11,4 +11,6 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Long> 
 
     Optional<BankAccount> findByUsernameEquals(String username);
 
+    Optional<BankAccount> findBankAccountByUsernameEquals(String username);
+
 }

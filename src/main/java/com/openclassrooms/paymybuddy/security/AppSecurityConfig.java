@@ -28,9 +28,7 @@ public class AppSecurityConfig {
                     .loginPage("/login")
                     .defaultSuccessUrl("/home")
                 .and()
-                .sessionManagement(session -> session
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(true))
+
                 .build();
 
     }

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <link th:href="@{/css/style.css}" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+  <title>PayMyBuddy - Register bank account</title>
+</head>
+<body>
+<div class="card bank-account-information-container">
+    <label class="label">Enter your IBAN</label>
+    <label for="iban"></label><input type="text" id="iban" name="iban" class="form-control" placeholder="IBAN"
+                                  required="" autofocus="">
+</div>
+<div class="login-element">
+    <label class="label">Enter your SWIFT CODE</label>
+    <label for="swift"></label><input type="text" id="swift" name="swift" class="form-control"
+                                  placeholder="SWIFT" required="">
+</div>
+<button onclick="postSignUp()" id="login-button" class="btn btn-lg btn-primary btn-block login-button" type="submit">
+    Save</button>
+
+</div>
+
+</body>
+</html>
+
+<script>
+    const postSignUp = () => {
+        let iban = document.getElementById("iban").value;
+        let swift = document.getElementById("swift").value;
+        fetch('http://localhost:8080/api/v1/bank_account/add', {
+            redirect: 'follow',
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ "iban": iban, "swift": swift})
+        })
+            .then(res => {
+                res.json()
+                console.log(res.json())
+            })
+            .then(() => window.open("http://localhost:8080/home", "_self"))
+    }
+</script>

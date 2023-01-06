@@ -23,12 +23,12 @@ public class BankAccountService {
             Optional <BankAccount> optionalBankAccount = bankAccountRepository.findByUsernameEquals(username);
             if (optionalBankAccount.isEmpty()) {
                 BankAccount bankAccountToSave = new BankAccount(
-                        bankAccount.getAccountNumber(),
+                        null,
                         bankAccount.getIban(),
                         bankAccount.getSwift(),
-                        bankAccount.getBankCode(),
-                        bankAccount.getCounterCode(),
-                        bankAccount.getRibKey(),
+                        null,
+                        null,
+                        null,
                         username
                 );
                 bankAccountRepository.save(bankAccountToSave);
@@ -36,6 +36,12 @@ public class BankAccountService {
             } else {
                 throw new RuntimeException("Information already saved.");
             }
+    }
+
+    public Boolean bankAccountInformationArePresentOrNot() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional <BankAccount> bankAccountByUsernameEquals = bankAccountRepository.findBankAccountByUsernameEquals(username);
+        return bankAccountByUsernameEquals.isPresent();
     }
 
 

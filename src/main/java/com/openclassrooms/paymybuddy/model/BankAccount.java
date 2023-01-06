@@ -43,4 +43,9 @@ public class BankAccount {
         this.ribKey = ribKey;
         this.username = username;
     }
+
+    public BankAccount(String iban, String swift) {
+        this.iban = iban;
+        this.swift = swift;
+    }
 }

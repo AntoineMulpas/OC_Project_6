@@ -60,4 +60,9 @@ public class UserAuthenticationService implements UserDetailsService {
             throw new UsernameNotFoundException("Username not found.");
         }
     }
+
+    public String findUsernameById(Long friendId) {
+        Optional <UserAuthentication> findUsernameById = userAuthRepository.findById(friendId);
+        return findUsernameById.map(UserAuthentication::getUsername).orElse(null);
+    }
 }

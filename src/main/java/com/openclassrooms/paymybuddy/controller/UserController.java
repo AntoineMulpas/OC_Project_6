@@ -28,4 +28,9 @@ public class UserController {
     public UserDTO getCurrentUserInformation() {
         return userService.getCurrentUserInformation();
     }
+
+    @GetMapping("/information-saved")
+    public Boolean isCurrentUserInformationSaved() {
+        return userService.isCurrentUserInformationSaved();
+    }
 }

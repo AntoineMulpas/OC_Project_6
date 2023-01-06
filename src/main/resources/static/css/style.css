@@ -196,3 +196,13 @@
     align-items: center;
 
 }
+
+/*
+////// BANK ACCOUNT INFORMATION REGISTER
+ */
+
+.bank-account-information-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,6 +1,7 @@
 package com.openclassrooms.paymybuddy.service;
 
 import com.openclassrooms.paymybuddy.model.UserRelations;
+import com.openclassrooms.paymybuddy.model.UserRelationsDTO;
 import com.openclassrooms.paymybuddy.repository.UserRelationsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,15 +22,17 @@ class UserRelationsServiceTest {
     private UserRelationsRepository userRelationsRepository;
     @Mock
     private IdOfUserAuthenticationService idOfUserAuthenticationService;
+    @Mock
+    private UserService userService;
 
     @BeforeEach
     void setUp() {
-        underTest = new UserRelationsService(userRelationsRepository, idOfUserAuthenticationService);
+        underTest = new UserRelationsService(userRelationsRepository, idOfUserAuthenticationService, userAuthenticationService, userService);
     }
 
     @Test
     void getListOfUserRelations() {
-        List <UserRelations> listOfUserRelations = underTest.getListOfUserRelations();
+        List <UserRelationsDTO> listOfUserRelations = underTest.getListOfUserRelations();
         assertEquals(0 ,listOfUserRelations.size());
     }
 

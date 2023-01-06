@@ -17,7 +17,7 @@ public class BankAccountController {
         this.bankAccountService = bankAccountService;
     }
 
-    @GetMapping("/add")
+    @PostMapping("/add")
     public ResponseEntity<String> addBankAccountInformation(
             @RequestBody BankAccount bankAccount
             ) {
