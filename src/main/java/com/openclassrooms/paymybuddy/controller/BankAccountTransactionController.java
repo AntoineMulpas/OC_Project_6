@@ -3,11 +3,9 @@ package com.openclassrooms.paymybuddy.controller;
 import com.openclassrooms.paymybuddy.model.BankTransaction;
 import com.openclassrooms.paymybuddy.service.BankTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/banktransaction")
@@ -22,17 +20,30 @@ public class BankAccountTransactionController {
 
     @PostMapping("/from")
     public ResponseEntity <String> makeANewTransactionFromAppAccountToABankAccount(
-            @RequestBody BankTransaction bankTransaction
+            @RequestParam Double amount
     ) {
-        bankTransactionService.makeANewTransactionFromAppAccountToBankAccount(bankTransaction);
-        return ResponseEntity.ok("Bank transaction has been made with success.");
+        try {
+            System.out.println("has been called");
+
+            bankTransactionService.makeANewTransactionFromAppAccountToBankAccount(amount);
+            return ResponseEntity.ok().body("Transaction to bank of " + amount + " made with success.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("An error occurend for transaction to bank of " + amount + ". " + e);
+
+        }
     }
 
     @PostMapping("/to")
     public ResponseEntity<String> makeANewTransactionFromBankAccountToAppAccount(
-            @RequestBody BankTransaction bankTransaction
+            @RequestParam Double amount
     ) {
-        bankTransactionService.makeANewTransactionFromBankAccountToAppAccount(bankTransaction);
-        return ResponseEntity.ok("Bank transaction has been made with success.");
+        try {
+            System.out.println("has been called");
+            bankTransactionService.makeANewTransactionFromBankAccountToAppAccount(amount);
+            return ResponseEntity.ok().body("Transaction to app of " + amount + " made with success.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("An error occurend for transaction to app of " + amount + ". " + e);
+
+        }
     }
 }

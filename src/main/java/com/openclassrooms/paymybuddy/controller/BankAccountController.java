@@ -1,8 +1,8 @@
 package com.openclassrooms.paymybuddy.controller;
 
 import com.openclassrooms.paymybuddy.model.BankAccount;
-import com.openclassrooms.paymybuddy.model.BankTransaction;
 import com.openclassrooms.paymybuddy.service.BankAccountService;
+import com.openclassrooms.paymybuddy.service.BankTransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.*;
 public class BankAccountController {
 
     private final BankAccountService bankAccountService;
+    private final BankTransactionService bankTransactionService;
 
-    public BankAccountController(BankAccountService bankAccountService) {
+    public BankAccountController(BankAccountService bankAccountService, BankTransactionService bankTransactionService) {
         this.bankAccountService = bankAccountService;
+        this.bankTransactionService = bankTransactionService;
     }
 
     @PostMapping("/add")
@@ -28,6 +30,8 @@ public class BankAccountController {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.toString());
         }
     }
+
+
 
 
 }

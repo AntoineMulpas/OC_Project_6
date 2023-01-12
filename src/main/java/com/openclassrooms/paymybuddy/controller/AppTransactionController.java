@@ -3,10 +3,7 @@ package com.openclassrooms.paymybuddy.controller;
 import com.openclassrooms.paymybuddy.model.AppTransaction;
 import com.openclassrooms.paymybuddy.service.AppTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/transaction")
@@ -22,9 +19,11 @@ public class AppTransactionController {
 
     @PostMapping("/send")
     public AppTransaction makeANewAppTransaction(
-            @RequestBody AppTransaction appTransaction
+            @RequestParam String receiverId,
+            @RequestParam Double amount
     ) {
-        return appTransactionService.makeANewAppTransaction(appTransaction);
+        Long idToPass = Long.parseLong(receiverId);
+        return appTransactionService.makeANewAppTransaction(idToPass, amount);
     }
 
 

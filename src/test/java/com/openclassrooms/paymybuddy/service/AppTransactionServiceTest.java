@@ -22,7 +22,7 @@ class AppTransactionServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new AppTransactionService(appTransactionRepository, idOfUserAuthenticationService);
+        underTest = new AppTransactionService(appTransactionRepository, appAccountRepository, idOfUserAuthenticationService);
     }
 
     @Test

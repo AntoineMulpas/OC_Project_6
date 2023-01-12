@@ -18,16 +18,32 @@
     </div>
     <div class="transfer-menu-item card">
       <h3>Relations</h3>
-      <button class="btn btn-secondary">Make a transfer</button>
+      <a href="http://localhost:8080/app-transfer"><button class="btn btn-secondary">Make a transfer</button></a>
     </div>
     <div class="transfer-menu-item card">
       <h3>Bank</h3>
-      <button class="btn btn-secondary">Make a transfer</button>
+      <a href="http://localhost:8080/bank-transfer"><button class="btn btn-secondary">Make a transfer</button></a>
     </div>
   </div>
   <div class="transaction-history-container card">
     <div>
       <h3>Transaction history</h3>
+      <table class="table">
+        <thead>
+        <th>Date</th>
+        <th>Sender</th>
+        <th>Receiver</th>
+        <th>Amount</th>
+        </thead>
+        <tbody>
+        <tr th:each="transaction : ${transactionHistoric}">
+          <td><span th:text="${transaction.date}"></span></td>
+          <td><span th:text="${transaction.sender}"></span></td>
+          <td><span th:text="${transaction.receiver}"></span></td>
+          <td><span th:text="${transaction.amount}"></span></td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

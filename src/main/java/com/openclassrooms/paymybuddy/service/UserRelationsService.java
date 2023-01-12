@@ -30,7 +30,6 @@ public class UserRelationsService {
         List <UserRelations> listOfRelations = userRelationsRepository.findAllByUserIdEquals(userId);
         List<UserRelationsDTO> listToReturn = new ArrayList <>();
         listOfRelations.forEach(userRelations -> {
-            System.out.println(userRelations);
             Long friendId = userRelations.getFriendId();
             String friendUsername = userAuthenticationService.findUsernameById(friendId);
             User userInformation = userService.getUserInformationByUsername(friendUsername);
