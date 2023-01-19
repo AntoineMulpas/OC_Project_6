@@ -1,7 +1,9 @@
 package com.openclassrooms.paymybuddy.service;
 
 import com.openclassrooms.paymybuddy.model.User;
+import com.openclassrooms.paymybuddy.model.UserAuthentication;
 import com.openclassrooms.paymybuddy.model.UserDTO;
+import com.openclassrooms.paymybuddy.repository.UserAuthRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,9 +15,11 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserAuthRepository userAuthRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserAuthRepository userAuthRepository) {
         this.userRepository = userRepository;
+        this.userAuthRepository = userAuthRepository;
     }
 
     private String getCurrentUser() {
@@ -60,12 +64,17 @@ public class UserService {
     }
 
     public User getUserInformation(Long id) {
-        Optional <User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            return user.get();
-        } else {
-            throw new UsernameNotFoundException("User with id: " + id + " not found.");
+        Optional <UserAuthentication> userAuthRepositoryById = userAuthRepository.findById(id);
+        if (userAuthRepositoryById.isPresent()) {
+            String userAuthentication = userAuthRepositoryById.get().getUsername();
+            Optional <User> user = userRepository.findUserByUserAuthenticationEquals(userAuthentication);
+            if (user.isPresent()) {
+                return user.get();
+            } else {
+                throw new UsernameNotFoundException("User with id: " + id + " not found.");
+            }
         }
+        throw new RuntimeException("User not found.");
     }
 
     public User getUserInformationByUsername(String friendUsername) {

@@ -17,7 +17,8 @@ public class AppSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf().disable()
-                .cors().disable()
+                .cors()
+                .and()
                 .authorizeHttpRequests()
                     .antMatchers("/css/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/login", "/signup").permitAll()
@@ -28,7 +29,13 @@ public class AppSecurityConfig {
                     .loginPage("/login")
                     .defaultSuccessUrl("/home")
                 .and()
-
+                .logout()
+                .deleteCookies("JSESSIONID")
+                .and()
+                .rememberMe()
+                .key("AGK123AZERTY")
+                .tokenValiditySeconds(86400)
+                .and()
                 .build();
 
     }

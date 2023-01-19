@@ -38,7 +38,7 @@ class BankTransactionServiceTest {
         when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
         when(appAccountRepository.findAppAccountByUserIdEquals(1L)).thenReturn(optionalAppAccount);
         BankTransaction transactionToBePassed = new BankTransaction(10.3);
-        underTest.makeANewTransactionFromAppAccountToBankAccount(transactionToBePassed);
+        underTest.makeANewTransactionFromAppAccountToBankAccount(transactionToBePassed.getAmount());
         verify(bankTransactionRepository, times(1)).save(any());
         verify(appAccountRepository, times(1)).save(any());
     }
@@ -47,20 +47,20 @@ class BankTransactionServiceTest {
     void makeANewTransactionFromAppAccountToBankAccountShouldThrowWhenUserIdIsNull() {
         when(idOfUserAuthenticationService.getUserId()).thenReturn(null);
         BankTransaction transactionToBePassed = new BankTransaction(10.3);
-        assertThrows(RuntimeException.class, () -> underTest.makeANewTransactionFromAppAccountToBankAccount(transactionToBePassed));
+        assertThrows(RuntimeException.class, () -> underTest.makeANewTransactionFromAppAccountToBankAccount(transactionToBePassed.getAmount()));
     }
 
     @Test
     void makeANewTransactionFromAppAccountToBankAccountShouldThrowWhenAmountIsInferiorToZero() {
         BankTransaction transactionToBePassed = new BankTransaction(-0.1);
-        assertThrows(RuntimeException.class, () -> underTest.makeANewTransactionFromAppAccountToBankAccount(transactionToBePassed));
+        assertThrows(RuntimeException.class, () -> underTest.makeANewTransactionFromAppAccountToBankAccount(transactionToBePassed.getAmount()));
     }
 
     @Test
     void makeANewTransactionFromAppAccountToBankAccountShouldThrowWhenAppAccountDoesNotExist() {
         when(appAccountRepository.findAppAccountByUserIdEquals(1L)).thenReturn(Optional.empty());
         BankTransaction transactionToBePassed = new BankTransaction(13.1);
-        assertThrows(RuntimeException.class, () -> underTest.makeANewTransactionFromAppAccountToBankAccount(transactionToBePassed));
+        assertThrows(RuntimeException.class, () -> underTest.makeANewTransactionFromAppAccountToBankAccount(transactionToBePassed.getAmount()));
     }
 
     @Test
@@ -69,7 +69,7 @@ class BankTransactionServiceTest {
         when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
         when(appAccountRepository.findAppAccountByUserIdEquals(1L)).thenReturn(optionalAppAccount);
         BankTransaction transactionToBePassed = new BankTransaction(10.3);
-        underTest.makeANewTransactionFromBankAccountToAppAccount(transactionToBePassed);
+        underTest.makeANewTransactionFromBankAccountToAppAccount(transactionToBePassed.getAmount());
         verify(bankTransactionRepository, times(1)).save(any());
         verify(appAccountRepository, times(1)).save(any());
     }
@@ -78,20 +78,20 @@ class BankTransactionServiceTest {
     void makeANewTransactionFromBankAccountToAppAccountShouldThrowWhenUserIdIsNull() {
         when(idOfUserAuthenticationService.getUserId()).thenReturn(null);
         BankTransaction transactionToBePassed = new BankTransaction(10.3);
-        assertThrows(RuntimeException.class, () -> underTest.makeANewTransactionFromBankAccountToAppAccount(transactionToBePassed));
+        assertThrows(RuntimeException.class, () -> underTest.makeANewTransactionFromBankAccountToAppAccount(transactionToBePassed.getAmount()));
     }
 
     @Test
     void makeANewTransactionFromBankAccountToAppAccountShouldThrowWhenAmountIsInferiorToZero() {
         BankTransaction transactionToBePassed = new BankTransaction(-0.1);
-        assertThrows(RuntimeException.class, () -> underTest.makeANewTransactionFromBankAccountToAppAccount(transactionToBePassed));
+        assertThrows(RuntimeException.class, () -> underTest.makeANewTransactionFromBankAccountToAppAccount(transactionToBePassed.getAmount()));
     }
 
     @Test
     void makeANewTransactionFromBankAccountToAppAccountShouldThrowWhenAppAccountDoesNotExist() {
         when(appAccountRepository.findAppAccountByUserIdEquals(1L)).thenReturn(Optional.empty());
         BankTransaction transactionToBePassed = new BankTransaction(13.1);
-        assertThrows(RuntimeException.class, () -> underTest.makeANewTransactionFromBankAccountToAppAccount(transactionToBePassed));
+        assertThrows(RuntimeException.class, () -> underTest.makeANewTransactionFromBankAccountToAppAccount(transactionToBePassed.getAmount()));
     }
 
 

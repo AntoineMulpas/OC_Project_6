@@ -2,7 +2,7 @@ package com.openclassrooms.paymybuddy.service;
 
 import com.openclassrooms.paymybuddy.model.AppAccount;
 import com.openclassrooms.paymybuddy.model.BankTransaction;
-import com.openclassrooms.paymybuddy.model.BankTransactionDTO;
+import com.openclassrooms.paymybuddy.model.TransactionDTO;
 import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import com.openclassrooms.paymybuddy.repository.BankTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,12 +93,12 @@ public class BankTransactionService {
         }
     }
 
-    public List<BankTransactionDTO> getListOfBankTransactionForCurrentUser() {
+    public List<TransactionDTO> getListOfBankTransactionForCurrentUser() {
         Long userId= idOfUserAuthenticationService.getUserId();
         List <BankTransaction> transactionByUserId = bankTransactionRepository.findTransactionByUserId(userId);
-        List<BankTransactionDTO> listToReturn = new ArrayList <>();
+        List<TransactionDTO> listToReturn = new ArrayList <>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        transactionByUserId.forEach(bankTransaction -> listToReturn.add(new BankTransactionDTO(bankTransaction.getDate().format(formatter), "AppAccount", "BankAccount", bankTransaction.getAmount())));
+        transactionByUserId.forEach(bankTransaction -> listToReturn.add(new TransactionDTO(bankTransaction.getDate().format(formatter), "AppAccount", "BankAccount", bankTransaction.getAmount())));
         return listToReturn;
     }
 

@@ -24,6 +24,8 @@ class UserRelationsServiceTest {
     private IdOfUserAuthenticationService idOfUserAuthenticationService;
     @Mock
     private UserService userService;
+    @Mock
+    private UserAuthenticationService userAuthenticationService;
 
     @BeforeEach
     void setUp() {
@@ -38,7 +40,7 @@ class UserRelationsServiceTest {
 
     @Test
     void addAFriend() {
-        UserRelations addAFriend = underTest.addAFriend(2L);
+        UserRelations addAFriend = underTest.addAFriend("mustang");
         UserRelations toCompare = new UserRelations(1L, 1L, 2L);
         assertEquals(addAFriend.getFriendId(), toCompare.getFriendId());
 

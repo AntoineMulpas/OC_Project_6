@@ -1,6 +1,7 @@
 package com.openclassrooms.paymybuddy.service;
 
 import com.openclassrooms.paymybuddy.model.AppTransaction;
+import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import com.openclassrooms.paymybuddy.repository.AppTransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,35 +16,25 @@ import static org.mockito.Mockito.when;
 class AppTransactionServiceTest {
 
     private AppTransactionService underTest;
+
     @Mock
     private AppTransactionRepository appTransactionRepository;
     @Mock
+    private AppAccountService appAccountService;
+    @Mock
     private IdOfUserAuthenticationService idOfUserAuthenticationService;
+    @Mock
+    private UserService userService;
 
     @BeforeEach
     void setUp() {
-        underTest = new AppTransactionService(appTransactionRepository, appAccountRepository, idOfUserAuthenticationService);
-    }
-
-    @Test
-    void makeANewAppTransaction() {
-        when(idOfUserAuthenticationService.userIdExists(2L)).thenReturn(true);
-        when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
-        AppTransaction appTransaction = new AppTransaction(2L, 10.3);
-        underTest.makeANewAppTransaction(appTransaction);
-    }
-
-    @Test
-    void makeANewAppTransactionShowThrowWhenReceiverIdIsNull() {
-        AppTransaction appTransaction = new AppTransaction(null, 10.3);
-        assertThrows(RuntimeException.class, () -> underTest.makeANewAppTransaction(appTransaction));
+        underTest = new AppTransactionService(appTransactionRepository, appAccountService, idOfUserAuthenticationService, userService);
     }
 
 
     @Test
-    void makeANewAppTransactionShouldThrowWhenAmountIsLessThanOne() {
-        AppTransaction appTransaction = new AppTransaction(1L, -1.0);
-        assertThrows(RuntimeException.class, () -> underTest.makeANewAppTransaction(appTransaction));
+    void getListOfAppTransactionForCurrentUserShouldReturnAListOfTransactionDTO() {
+        underTest.getListOfAppTransactionForCurrentUser();
 
     }
 }

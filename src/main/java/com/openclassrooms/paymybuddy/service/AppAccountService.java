@@ -5,9 +5,13 @@ import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class AppAccountService {
 
     private final AppAccountRepository appAccountRepository;
@@ -23,7 +27,7 @@ public class AppAccountService {
         Long id = idOfUserAuthenticationService.getUserId();
         Optional <AppAccount> appAccount = appAccountRepository.findAppAccountByUserIdEquals(id);
         if (appAccount.isPresent()) {
-            return appAccount.get().getSold();
+            return round(appAccount.get().getSold());
         } else {
             throw new RuntimeException("An error occurred while fetching the sold.");
         }
@@ -36,5 +40,22 @@ public class AppAccountService {
             );
             appAccountRepository.save(appAccount);
             return appAccount;
+    }
+
+    public AppAccount updateSoldOfAppAccount(Long userId, double amount) {
+        Optional <AppAccount> appAccountByUserIdEquals = appAccountRepository.findAppAccountByUserIdEquals(userId);
+        if (appAccountByUserIdEquals.isPresent()) {
+            AppAccount appAccountToUpdate = appAccountByUserIdEquals.get();
+            Double currentSold = appAccountToUpdate.getSold();
+            appAccountToUpdate.setSold(currentSold + amount);
+            return appAccountRepository.save(appAccountToUpdate);
+        } else {
+            throw new RuntimeException("Cannot update account with id: " + userId);
+        }
+    }
+
+    private double round(double value) {
+        BigDecimal bigDecimal = new BigDecimal(Double.toString(value));
+        return bigDecimal.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 }

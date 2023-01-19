@@ -24,11 +24,10 @@ public class BankAccountTransactionController {
     ) {
         try {
             System.out.println("has been called");
-
             bankTransactionService.makeANewTransactionFromAppAccountToBankAccount(amount);
             return ResponseEntity.ok().body("Transaction to bank of " + amount + " made with success.");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("An error occurend for transaction to bank of " + amount + ". " + e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("An error occurred for transaction to bank of " + amount + ". " + e);
 
         }
     }
@@ -42,7 +41,7 @@ public class BankAccountTransactionController {
             bankTransactionService.makeANewTransactionFromBankAccountToAppAccount(amount);
             return ResponseEntity.ok().body("Transaction to app of " + amount + " made with success.");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("An error occurend for transaction to app of " + amount + ". " + e);
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("An error occurred for transaction to app of " + amount + ". " + e);
 
         }
     }

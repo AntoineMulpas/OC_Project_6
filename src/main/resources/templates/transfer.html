@@ -27,7 +27,26 @@
   </div>
   <div class="transaction-history-container card">
     <div>
-      <h3>Transaction history</h3>
+      <h3>App Transaction history</h3>
+      <table class="table">
+        <thead>
+        <th>Date</th>
+        <th>Sender</th>
+        <th>Receiver</th>
+        <th>Amount</th>
+        </thead>
+        <tbody>
+        <tr th:each="transaction : ${appTransactionHistoric}">
+          <td><span th:text="${transaction.date}"></span></td>
+          <td><span th:text="${transaction.sender}"></span></td>
+          <td><span th:text="${transaction.receiver}"></span></td>
+          <td><span th:text="${transaction.amount}"></span></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Bank Transaction history</h3>
       <table class="table">
         <thead>
         <th>Date</th>
