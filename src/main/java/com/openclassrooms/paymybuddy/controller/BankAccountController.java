@@ -24,8 +24,8 @@ public class BankAccountController {
             @RequestBody BankAccount bankAccount
             ) {
         try {
-            String s = bankAccountService.addingBankAccountInformation(bankAccount);
-            return ResponseEntity.ok(s);
+            bankAccountService.addingBankAccountInformation(bankAccount);
+            return ResponseEntity.ok("Account created.");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.toString());
         }

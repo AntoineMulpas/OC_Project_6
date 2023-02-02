@@ -22,7 +22,7 @@ public class UserService {
         this.userAuthRepository = userAuthRepository;
     }
 
-    private String getCurrentUser() {
+    protected String getCurrentUser() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 

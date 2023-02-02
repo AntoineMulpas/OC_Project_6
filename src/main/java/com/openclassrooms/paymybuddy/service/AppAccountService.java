@@ -43,15 +43,10 @@ public class AppAccountService {
     }
 
     public AppAccount updateSoldOfAppAccount(Long userId, double amount) {
-        Optional <AppAccount> appAccountByUserIdEquals = appAccountRepository.findAppAccountByUserIdEquals(userId);
-        if (appAccountByUserIdEquals.isPresent()) {
-            AppAccount appAccountToUpdate = appAccountByUserIdEquals.get();
-            Double currentSold = appAccountToUpdate.getSold();
-            appAccountToUpdate.setSold(currentSold + amount);
-            return appAccountRepository.save(appAccountToUpdate);
-        } else {
-            throw new RuntimeException("Cannot update account with id: " + userId);
-        }
+        AppAccount appAccountToUpdate = appAccountRepository.findAppAccountByUserIdEquals(userId)
+                .orElseThrow(() -> new RuntimeException("Cannot update account with id: " + userId));
+        appAccountToUpdate.setSold(appAccountToUpdate.getSold() + amount);
+        return appAccountRepository.save(appAccountToUpdate);
     }
 
     private double round(double value) {

@@ -13,6 +13,7 @@
             <form class="form-signin" method="post" action="/login">
                 <h1 class="login-title">PayMyBuddy</h1>
                 <h2 class="sign-up-title">Sign in</h2>
+                <p th:if="${loginError}" class="error">Wrong user or password</p>
                 <div class="login-element">
                     <input type="text" id="username" name="username" class="form-control" placeholder="Email" required="" autofocus="">
                 </div>

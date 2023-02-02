@@ -13,9 +13,9 @@
 <div class="friendList-container">
   <h1>Transfer money to your buddy</h1>
   <div class="d-flex">
-    <p><strong>Your sold is </strong></p>
-    <p th:text="${sold}"></p><br/>
-    <p th:text="${friendId}"></p>
+    <p><strong>Your sold is: &nbsp</strong></p>
+    <p th:text="${sold}"></p>
+    <p>€</p>
   </div>
   <div class="form-group">
     <label for="amount">Amount</label>
@@ -40,7 +40,6 @@
       method: 'POST',
     })
             .then(res => res.text())
-            .then(data => console.log(data))
-            .catch(res => console.log(res))
+            .then(() => window.open("http://localhost:8080/transfer", "_self"))
   }
 </script>

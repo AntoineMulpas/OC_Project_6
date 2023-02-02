@@ -12,7 +12,7 @@ public interface UserRelationsRepository extends JpaRepository<UserRelations, Lo
 
     List <UserRelations> findAllByUserIdEquals(Long id);
 
-    UserRelations findUserRelationsByUserIdEqualsAndFriendIdEquals(Long userId, Long friendId);
+    Optional<UserRelations> findUserRelationsByUserIdEqualsAndFriendIdEquals(Long userId, Long friendId);
 
     Optional<UserRelations> findUserRelationsByFriendIdEqualsAndUserIdEquals(Long friendId, Long id);
 

@@ -14,7 +14,10 @@
   <div class="transfer-menu-container">
     <div class="transfer-menu-item card">
       <h3>Sold</h3>
-      <p th:text="${sold}"></p>
+      <div class="d-flex">
+        <p th:text="${sold}"></p>
+        <p> €</p>
+      </div>
     </div>
     <div class="transfer-menu-item card">
       <h3>Relations</h3>

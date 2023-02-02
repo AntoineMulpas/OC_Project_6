@@ -50,6 +50,20 @@ class AppAccountServiceTest {
     void createANewAppAccount() {
         underTest.createAppAccount(1L);
         verify(appAccountRepository, times(1)).save(any());
+    }
 
+    @Test
+    void updateSoldOfAccount() {
+        when(appAccountRepository.findAppAccountByUserIdEquals(1L)).thenReturn(Optional.of(new AppAccount(
+                100.0, 1L
+        )));
+        underTest.updateSoldOfAppAccount(1L, 10.1);
+        verify(appAccountRepository, times(1)).save(any());
+    }
+
+    @Test
+    void updateSoldOfAccountShouldThrowWhenAppAccountNotFound() {
+        when(appAccountRepository.findAppAccountByUserIdEquals(1L)).thenReturn(Optional.empty());
+        assertThrows(RuntimeException.class, () -> underTest.updateSoldOfAppAccount(1L, 10.1));
     }
 }

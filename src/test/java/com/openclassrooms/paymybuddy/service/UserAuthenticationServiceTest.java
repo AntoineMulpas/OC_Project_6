@@ -1,11 +1,26 @@
 package com.openclassrooms.paymybuddy.service;
 
+import com.openclassrooms.paymybuddy.model.UserAuthentication;
 import com.openclassrooms.paymybuddy.repository.UserAuthRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import static org.junit.jupiter.api.Assertions.*;
+
+
+import java.util.Collection;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserAuthenticationServiceTest {
@@ -23,30 +38,92 @@ class UserAuthenticationServiceTest {
         underTest = new UserAuthenticationService(userAuthRepository, passwordEncoder, appAccountService);
     }
 
-    /*
+
     @Test
-    @Disabled
+    void loadUserByUsername() {
+        UserAuthentication userAuthentication = new UserAuthentication("antoine", "password");
+        when(userAuthRepository.findByUsernameEquals("antoine")).thenReturn(Optional.of(userAuthentication));
+        UserDetails userDetails = underTest.loadUserByUsername("antoine");
+        assertNotNull(userDetails);
+    }
+
+    @Test
+    void loadUserByUsernameShouldThrow() {
+        Optional<UserAuthentication> optional = Optional.empty();
+        when(userAuthRepository.findByUsernameEquals("antoine")).thenReturn(optional);
+        assertThrows(UsernameNotFoundException.class, () -> underTest.loadUserByUsername("antoine"));
+    }
+
+    @Test
+    void saveAUserShouldThrowWhenUserIsNull() {
+        UserAuthentication userAuthentication = new UserAuthentication(null, "password");
+        assertThrows(IllegalArgumentException.class, () -> underTest.saveAUser(userAuthentication));
+    }
+
+    @Test
+    void saveAUserShouldThrowWhenUserIsEmpty() {
+        UserAuthentication userAuthentication = new UserAuthentication("", "password");
+        assertThrows(IllegalArgumentException.class, () -> underTest.saveAUser(userAuthentication));
+    }
+
+    @Test
+    void saveAUserShouldThrowWhenPasswordIsNull() {
+        UserAuthentication userAuthentication = new UserAuthentication("antoine", null);
+        assertThrows(IllegalArgumentException.class, () -> underTest.saveAUser(userAuthentication));
+    }
+
+    @Test
+    void saveAUserShouldThrowWhenPasswordIsEmpty() {
+        UserAuthentication userAuthentication = new UserAuthentication("antoine", "");
+        assertThrows(IllegalArgumentException.class, () -> underTest.saveAUser(userAuthentication));
+    }
+
+    @Test
+    void saveUserShouldThrowIfUserNameAlreadyUsed() {
+        UserAuthentication userAuthentication = new UserAuthentication("antoine", "password");
+        Optional<UserAuthentication> optional = Optional.of(new UserAuthentication("antoine", "password"));
+        when(userAuthRepository.findByUsernameEquals("antoine")).thenReturn(optional);
+        assertThrows(RuntimeException.class, () -> underTest.saveAUser(userAuthentication));
+
+    }
+
+    @Test
     void saveAUser() {
-        User userToPass = new User("antoine@gmail.com", "password");
-        underTest.saveAUser(userToPass);
-        verify(userAuthRepository, times(1)).findByUsernameEquals("antoine@gmail.com");
+        UserAuthentication userAuthentication = new UserAuthentication("antoine", "password");
+        Optional<UserAuthentication> optional = Optional.empty();
+        when(userAuthRepository.findByUsernameEquals("antoine")).thenReturn(optional);
+        when(userAuthRepository.save(any())).thenReturn(userAuthentication);
+        UserAuthentication userAuthentication1 = underTest.saveAUser(userAuthentication);
+        assertNotNull(userAuthentication1);
     }
 
     @Test
-    @Disabled
-    void saveAUserShouldThrowsNullPointerExceptionForPasswordIsNull() {
-        User userToPass = new User("antoine@gmail.com", null);
-        assertThrows(NullPointerException.class, () -> underTest.saveAUser(userToPass));
+    void findIdOfUserByUsernameShouldThrowWhenUserIsNotFound() {
+        Optional<UserAuthentication> optional = Optional.empty();
+        when(userAuthRepository.findByUsernameEquals(any())).thenReturn(optional);
+        assertThrows(UsernameNotFoundException.class, () -> underTest.findIdOfUserByUsername("antoine"));
     }
-
 
     @Test
-    @Disabled
-    void saveAUserShouldThrowUserNameNotFoundException() {
-        User userToPass = new User("antoine@gmail.com", "password");
-        when(userAuthRepository.findByUsernameEquals(userToPass.getUsername())).thenReturn(Optional.of(new User("antoine@gmail.com", "password")));
-        assertThrows(RuntimeException.class, () -> underTest.saveAUser(userToPass));
+    void findIdOfUserByUsername() {
+        Optional<UserAuthentication> optional = Optional.of(new UserAuthentication("antoine", "password"));
+        when(userAuthRepository.findByUsernameEquals(any())).thenReturn(optional);
+        UserAuthentication toCheck = underTest.findIdOfUserByUsername("antoine");
+        assertNotNull(toCheck);
+
     }
 
-     */
+    @Test
+    void findUsernameByIdShouldThrowWhenFriendIdIsNotPresent() {
+        Optional<UserAuthentication> optional = Optional.empty();
+        when(userAuthRepository.findById(any())).thenReturn(optional);
+        assertThrows(IllegalArgumentException.class, () -> underTest.findUsernameById(any()));
+    }
+
+    @Test
+    void findByUsernameById() {
+        Optional<UserAuthentication> optional = Optional.of(new UserAuthentication("antoine", "password"));
+        when(userAuthRepository.findById(any())).thenReturn(optional);
+        assertEquals("antoine", underTest.findUsernameById(any()));
+    }
 }

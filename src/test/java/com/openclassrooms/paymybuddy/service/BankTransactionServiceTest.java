@@ -4,12 +4,16 @@ import com.openclassrooms.paymybuddy.model.AppAccount;
 import com.openclassrooms.paymybuddy.model.BankTransaction;
 import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import com.openclassrooms.paymybuddy.repository.BankTransactionRepository;
+import com.openclassrooms.paymybuddy.repository.FeeRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,20 +31,37 @@ class BankTransactionServiceTest {
     @Mock
     AppAccountRepository appAccountRepository;
 
+    @Mock
+    FeeRepository feeRepository;
+
     @BeforeEach
     void setUp() {
-        underTest = new BankTransactionService(bankTransactionRepository, idOfUserAuthenticationService, appAccountRepository);
+        underTest = new BankTransactionService(bankTransactionRepository, idOfUserAuthenticationService, appAccountRepository, feeRepository);
     }
 
     @Test
     void makeANewTransactionFromAppAccountToBankAccount() {
-        Optional<AppAccount> optionalAppAccount = Optional.of(new AppAccount(1L, 0.0, 1L));
+        Optional<AppAccount> optionalAppAccount = Optional.of(new AppAccount(1L, 20.3, 1L));
         when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
         when(appAccountRepository.findAppAccountByUserIdEquals(1L)).thenReturn(optionalAppAccount);
-        BankTransaction transactionToBePassed = new BankTransaction(10.3);
-        underTest.makeANewTransactionFromAppAccountToBankAccount(transactionToBePassed.getAmount());
+        when(bankTransactionRepository.save(any())).thenReturn(new BankTransaction(1L, LocalDateTime.now(), 100.1));
+        underTest.makeANewTransactionFromAppAccountToBankAccount(10.1);
         verify(bankTransactionRepository, times(1)).save(any());
+        verify(feeRepository, times(1)).save(any());
         verify(appAccountRepository, times(1)).save(any());
+    }
+
+    @Test
+    void makeANewTransactionFromAppAccountToBankAccountShouldThrowIfAmountIsNegative() {
+        assertThrows(RuntimeException.class, () -> underTest.makeANewTransactionFromAppAccountToBankAccount(-100.3));
+    }
+
+    @Test
+    void makeANewTransactionFromAppAccountToBankAccountShouldThrowIfNewSoldIsNegative() {
+        Optional<AppAccount> optionalAppAccount = Optional.of(new AppAccount(1L, 20.3, 1L));
+        when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
+        when(appAccountRepository.findAppAccountByUserIdEquals(1L)).thenReturn(optionalAppAccount);
+        assertThrows(IllegalArgumentException.class, () -> underTest.makeANewTransactionFromAppAccountToBankAccount(100.3));
     }
 
     @Test
@@ -65,12 +86,13 @@ class BankTransactionServiceTest {
 
     @Test
     void makeANewTransactionFromBankAccountToAppAccount() {
-        Optional<AppAccount> optionalAppAccount = Optional.of(new AppAccount(1L, 0.0, 1L));
         when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
+        Optional<AppAccount> optionalAppAccount = Optional.of(new AppAccount(1L, 100.1, 1L));
         when(appAccountRepository.findAppAccountByUserIdEquals(1L)).thenReturn(optionalAppAccount);
-        BankTransaction transactionToBePassed = new BankTransaction(10.3);
-        underTest.makeANewTransactionFromBankAccountToAppAccount(transactionToBePassed.getAmount());
+        when(bankTransactionRepository.save(any())).thenReturn(new BankTransaction(1L, LocalDateTime.now(), 120.1));
+        underTest.makeANewTransactionFromBankAccountToAppAccount(10.1);
         verify(bankTransactionRepository, times(1)).save(any());
+        verify(feeRepository, times(1)).save(any());
         verify(appAccountRepository, times(1)).save(any());
     }
 
@@ -89,10 +111,26 @@ class BankTransactionServiceTest {
 
     @Test
     void makeANewTransactionFromBankAccountToAppAccountShouldThrowWhenAppAccountDoesNotExist() {
+        when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
         when(appAccountRepository.findAppAccountByUserIdEquals(1L)).thenReturn(Optional.empty());
         BankTransaction transactionToBePassed = new BankTransaction(13.1);
         assertThrows(RuntimeException.class, () -> underTest.makeANewTransactionFromBankAccountToAppAccount(transactionToBePassed.getAmount()));
     }
+
+    @Test
+    void getListOfBankTransactionForCurrentUserShouldThrowIfUserIdIsNull() {
+        when(idOfUserAuthenticationService.getUserId()).thenReturn(null);
+        assertThrows(RuntimeException.class, () -> underTest.getListOfBankTransactionForCurrentUser());
+    }
+
+    @Test
+    void getListOfBankTransactionForCurrentUser() {
+        List<BankTransaction> mockedList = List.of(new BankTransaction(1L, LocalDateTime.now(), 12.2));
+        when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
+        when(bankTransactionRepository.findTransactionByUserId(1L)).thenReturn(mockedList);
+        assertEquals(1, underTest.getListOfBankTransactionForCurrentUser().size());
+    }
+
 
 
 }

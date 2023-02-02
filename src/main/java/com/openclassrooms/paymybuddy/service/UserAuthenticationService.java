@@ -35,22 +35,29 @@ public class UserAuthenticationService implements UserDetailsService {
 
 
     public UserAuthentication saveAUser(UserAuthentication user) {
-            if (!user.getUsername().isEmpty() && !user.getPassword().isEmpty()) {
-                if (userAuthRepository.findByUsernameEquals(user.getUsername()).isEmpty()) {
-                    UserAuthentication userToSave = new UserAuthentication(
-                            user.getUsername(),
-                            passwordEncoder.encode(user.getPassword())
-                            );
-                    UserAuthentication savedUser = userAuthRepository.save(userToSave);
-                    appAccountService.createAppAccount(savedUser.getId());
-                    return userToSave;
-                } else {
-                    throw new RuntimeException("Username already used.");
-                }
-            } else {
-                throw new NullPointerException();
-            }
+        validateUser(user);
+        if (userAuthRepository.findByUsernameEquals(user.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already used.");
+        }
+
+        UserAuthentication userToSave = new UserAuthentication(
+                user.getUsername(),
+                passwordEncoder.encode(user.getPassword())
+        );
+        UserAuthentication savedUser = userAuthRepository.save(userToSave);
+        appAccountService.createAppAccount(savedUser.getId());
+        return userToSave;
     }
+
+    private void validateUser(UserAuthentication user) {
+        if (user.getUsername() == null || user.getUsername().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty.");
+        }
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be empty.");
+        }
+    }
+
 
     public UserAuthentication findIdOfUserByUsername(String username) {
         Optional<UserAuthentication> optionalUserAuthentication = userAuthRepository.findByUsernameEquals(username);
@@ -62,7 +69,9 @@ public class UserAuthenticationService implements UserDetailsService {
     }
 
     public String findUsernameById(Long friendId) {
-        Optional <UserAuthentication> findUsernameById = userAuthRepository.findById(friendId);
-        return findUsernameById.map(UserAuthentication::getUsername).orElse(null);
+        return userAuthRepository.findById(friendId)
+                .map(UserAuthentication::getUsername)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + friendId));
     }
+
 }

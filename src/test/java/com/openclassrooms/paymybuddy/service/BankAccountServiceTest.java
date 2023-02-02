@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.internal.verification.Times;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BankAccountServiceTest {
@@ -39,7 +41,8 @@ class BankAccountServiceTest {
                 "CB123",
                 12,
                 222,
-                987
+                987,
+                "antoine"
         );
     }
 
@@ -47,14 +50,28 @@ class BankAccountServiceTest {
     void addingBankAccountInformation() {
         Optional<BankAccount> optionalBankAccount = Optional.empty();
         when(bankAccountRepository.findByUsernameEquals("antoine@gmail.com")).thenReturn(optionalBankAccount);
-        assertEquals("Bank account's information saved with success.", underTest.addingBankAccountInformation(bankAccount));
-
+        underTest.addingBankAccountInformation(bankAccount);
+        verify(bankAccountRepository, times(1)).save(any());
     }
 
     @Test
     void addingBankAccountInformationShouldThrow() {
         Optional<BankAccount> optionalBankAccount = Optional.of(bankAccount);
-        when(bankAccountRepository.findByUsernameEquals("antoine")).thenReturn(optionalBankAccount);
-        assertThrows(RuntimeException.class, () -> underTest.addingBankAccountInformation(bankAccount));
+        when(bankAccountRepository.findByUsernameEquals(any())).thenReturn(optionalBankAccount);
+        assertThrows(IllegalArgumentException.class, () -> underTest.addingBankAccountInformation(bankAccount));
+    }
+
+    @Test
+    void bankAccountInformationArePresentOrNotShouldReturnFalse() {
+        Optional<BankAccount> optionalBankAccount = Optional.empty();
+        when(bankAccountRepository.findBankAccountByUsernameEquals(any())).thenReturn(optionalBankAccount);
+        assertEquals(false, underTest.bankAccountInformationArePresentOrNot());
+    }
+
+    @Test
+    void bankAccountInformationArePresentOrNotShouldReturnTrue() {
+        Optional<BankAccount> optionalBankAccount = Optional.of(new BankAccount());
+        when(bankAccountRepository.findBankAccountByUsernameEquals(any())).thenReturn(optionalBankAccount);
+        assertEquals(true, underTest.bankAccountInformationArePresentOrNot());
     }
 }

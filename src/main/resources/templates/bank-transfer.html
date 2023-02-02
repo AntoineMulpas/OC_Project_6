@@ -15,7 +15,7 @@
     <h1>Welcome to PayMyBuddy</h1>
     <form>
       <div class="d-flex">
-        <p><strong>Your sold is: </strong></p>
+        <p><strong>Your sold is: &nbsp</strong></p>
         <p> </p>
         <p th:text=" ${sold}"></p>
         <p>€</p>
@@ -57,18 +57,18 @@
         }
       }
     let amount = document.getElementById("amount").value;
-    console.log(select)
-    console.log(amount)
-
-
     let URL = select === "app" ? 'http://localhost:8080/api/v1/banktransaction/to?amount=' + amount :
             'http://localhost:8080/api/v1/banktransaction/from?amount=' + amount;
 
-    console.log(URL)
     fetch(URL, {
       method: 'POST',
     })
-            .then(() => window.open("http://localhost:8080/transfer", "_self"))
+            .then(res => res.text())
+            .then(() => openNewWindow())
+  }
+
+  const openNewWindow = () => {
+    window.open("http://localhost:8080/transfer", "_self")
   }
 </script>
 

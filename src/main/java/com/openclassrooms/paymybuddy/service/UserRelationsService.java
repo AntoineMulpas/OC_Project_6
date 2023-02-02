@@ -39,28 +39,23 @@ public class UserRelationsService {
     }
 
     public UserRelations addAFriend (String email) {
-            Long userId = idOfUserAuthenticationService.getUserId();
-            Long friendId = userAuthenticationService.findIdOfUserByUsername(email).getId();
-            Optional <UserRelations> userRelationsByFriendIdEquals = userRelationsRepository.findUserRelationsByFriendIdEqualsAndUserIdEquals(friendId, userId);
-            if (userRelationsByFriendIdEquals.isEmpty()) {
-                UserRelations userRelations = new UserRelations(userId, friendId);
-                userRelationsRepository.save(userRelations);
-                return userRelations;
-            } else {
-                throw new RuntimeException("Relation already exists.");
-            }
+        Long userId = idOfUserAuthenticationService.getUserId();
+        Long friendId = userAuthenticationService.findIdOfUserByUsername(email).getId();
+        return userRelationsRepository.findUserRelationsByFriendIdEqualsAndUserIdEquals(friendId, userId)
+                .orElseGet(() -> {
+                    UserRelations newUserRelations = new UserRelations(userId, friendId);
+                    userRelationsRepository.save(newUserRelations);
+                    return newUserRelations;
+                });
     }
 
     public void deleteAFriend(Long friendId) {
-        try {
-            Long userId = idOfUserAuthenticationService.getUserId();
-            UserRelations relations = userRelationsRepository.findUserRelationsByUserIdEqualsAndFriendIdEquals(userId, friendId);
-            if (relations != null) {
-                userRelationsRepository.delete(relations);
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        Long userId = idOfUserAuthenticationService.getUserId();
+        UserRelations relations = userRelationsRepository
+                .findUserRelationsByUserIdEqualsAndFriendIdEquals(userId, friendId)
+                .orElseThrow(() -> new RuntimeException("Relation is not present."));
+        userRelationsRepository.delete(relations);
     }
+
 
 }

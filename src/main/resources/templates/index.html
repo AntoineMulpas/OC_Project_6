@@ -14,14 +14,18 @@
     <div class="main-content">
         <div class="card main-content-card">
             <h1>Welcome to PayMyBuddy</h1>
-            <p th:if="${userIsPresent}">Your information are present.</p>
+            <p th:if="${userIsPresent}"></p>
             <p th:unless="${userIsPresent}">Your information are not present. <a
                     href="http://localhost:8080/register">You have to add them to use the App.</a></p>
-            <p th:if="${bankAccountIsPresent}">Your bank account information are present.</p>
+            <p th:if="${bankAccountIsPresent}"></p>
             <p th:unless="${bankAccountIsPresent}">Your bank account information are not present. <a
                     href="http://localhost:8080/bank-register">You
                 have to add them to use the App .</a></p>
-
+            <h4>Your sold is: </h4>
+            <div style="display: flex">
+                <p th:text="${sold}" th:remove="tag"></p>
+                <p>€</p>
+            </div>
         </div>
     </div>
 

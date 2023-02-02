@@ -44,23 +44,21 @@ public class BankTransactionService {
         }
 
         Long userId = idOfUserAuthenticationService.getUserId();
+
         if (userId == null) {
             throw new RuntimeException("User id does not exist.");
         }
 
-        Optional<AppAccount> appAccount = appAccountRepository.findAppAccountByUserIdEquals(userId);
-        if (appAccount.isEmpty()) {
-            throw new RuntimeException("App Account does not exist.");
-        }
+        AppAccount appAccount = appAccountRepository.findAppAccountByUserIdEquals(userId)
+                .orElseThrow(() -> new RuntimeException("App Account does not exist."));
 
-        Double soldOfAppAccount = appAccount.get().getSold();
-        double newSoldOfAppAccount = soldOfAppAccount - amount;
+        double newSoldOfAppAccount = appAccount.getSold() - amount;
         if (newSoldOfAppAccount < 0) {
-            throw new RuntimeException("Your AppAccount cannot have a negative sold.");
+            throw new IllegalArgumentException("Your AppAccount cannot have a negative sold.");
         }
 
-        appAccount.get().setSold(newSoldOfAppAccount);
-        appAccountRepository.save(appAccount.get());
+        appAccount.setSold(newSoldOfAppAccount);
+        appAccountRepository.save(appAccount);
 
         BankTransaction bankTransactionToSave = new BankTransaction(
                 userId,
@@ -79,6 +77,8 @@ public class BankTransactionService {
         feeRepository.save(fees);
         return savedBankTransaction;
     }
+
+
 
 
     public BankTransaction makeANewTransactionFromBankAccountToAppAccount(Double amount) {
@@ -124,28 +124,19 @@ public class BankTransactionService {
 
     public List<TransactionDTO> getListOfBankTransactionForCurrentUser() {
         Long userId = idOfUserAuthenticationService.getUserId();
+
         if (userId == null) {
             throw new RuntimeException("User id does not exist.");
         }
 
-        List<BankTransaction> transactionsByUserId = bankTransactionRepository.findTransactionByUserId(userId);
-        return transactionsByUserId.stream()
-                .map(transaction -> {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                    String sender = "BankAccount";
-                    String receiver = "AppAccount";
-                    if (transaction.getAmount() < 0) {
-                        sender = "AppAccount";
-                        receiver = "BankAccount";
-                    }
-
-                    return new TransactionDTO(
-                            transaction.getDate().format(formatter),
-                            sender,
-                            receiver,
-                            Math.abs(transaction.getAmount())
-                    );
-                })
+        return bankTransactionRepository.findTransactionByUserId(userId)
+                .stream()
+                .map(transaction -> new TransactionDTO(
+                        transaction.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                        transaction.getAmount() < 0 ? "AppAccount" : "BankAccount",
+                        transaction.getAmount() < 0 ? "BankAccount" : "AppAccount",
+                        Math.abs(transaction.getAmount())
+                ))
                 .collect(Collectors.toList());
     }
 }

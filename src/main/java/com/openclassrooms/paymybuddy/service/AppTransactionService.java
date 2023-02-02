@@ -1,18 +1,24 @@
 package com.openclassrooms.paymybuddy.service;
 
 import com.openclassrooms.paymybuddy.model.AppTransaction;
+import com.openclassrooms.paymybuddy.model.Fees;
 import com.openclassrooms.paymybuddy.model.TransactionDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.AppTransactionRepository;
+import com.openclassrooms.paymybuddy.repository.FeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.openclassrooms.paymybuddy.utils.CalculateFees.calculateFee;
+
 @Service
+@Transactional
 public class AppTransactionService {
 
     private final AppTransactionRepository appTransactionRepository;
@@ -20,39 +26,65 @@ public class AppTransactionService {
     private final IdOfUserAuthenticationService idOfUserAuthenticationService;
     private final UserService userService;
 
+    private final FeeRepository feeRepository;
+
     @Autowired
-    public AppTransactionService(AppTransactionRepository appTransactionRepository, AppAccountService appAccountService, IdOfUserAuthenticationService idOfUserAuthenticationService, UserService userService) {
+    public AppTransactionService(AppTransactionRepository appTransactionRepository, AppAccountService appAccountService, IdOfUserAuthenticationService idOfUserAuthenticationService, UserService userService, FeeRepository feeRepository) {
         this.appTransactionRepository = appTransactionRepository;
         this.appAccountService = appAccountService;
         this.idOfUserAuthenticationService = idOfUserAuthenticationService;
         this.userService = userService;
+        this.feeRepository = feeRepository;
     }
 
-/*
-/// ADD UPDATED OF SOLD ACCOUNT
- */
     public AppTransaction makeANewAppTransaction(Long receiverId, Double amount) {
-            if (receiverId != null && amount != null && amount > 0) {
-                if (idOfUserAuthenticationService.userIdExists(receiverId)) {
-                    Long senderId = idOfUserAuthenticationService.getUserId();
-
-                    appAccountService.updateSoldOfAppAccount(senderId, -amount);
-                    appAccountService.updateSoldOfAppAccount(receiverId, amount);
-
-                    AppTransaction transactionToSave = new AppTransaction(
-                            senderId,
-                            receiverId,
-                            LocalDateTime.now(),
-                            amount
-                    );
-                    return appTransactionRepository.save(transactionToSave);
-                } else {
-                    throw new RuntimeException("Receiver id: " + receiverId + " does not exist.");
-                }
-            } else {
-                throw new RuntimeException("An error occurred.");
-            }
+        validateTransaction(receiverId, amount);
+        Long senderId = idOfUserAuthenticationService.getUserId();
+        checkFunds(amount);
+        updateAccounts(senderId, receiverId, amount);
+        AppTransaction transactionToSave = createTransaction(senderId, receiverId, amount);
+        AppTransaction savedAppTransaction = appTransactionRepository.save(transactionToSave);
+        saveFees(savedAppTransaction);
+        return savedAppTransaction;
     }
+
+    private void validateTransaction(Long receiverId, Double amount) {
+        if (receiverId == null || amount == null || amount <= 0) {
+            throw new IllegalArgumentException("Invalid receiverId or amount.");
+        }
+        if (!idOfUserAuthenticationService.userIdExists(receiverId)) {
+            throw new IllegalArgumentException("Receiver id does not exist.");
+        }
+    }
+
+    private void checkFunds(Double amount) {
+        Double actualSoldOfSenderId = appAccountService.getSoldOfAccount();
+        if (actualSoldOfSenderId - amount < 0) {
+            throw new IllegalArgumentException("You don't have enough funds to make this transaction.");
+        }
+    }
+
+    private void updateAccounts(Long senderId, Long receiverId, Double amount) {
+        appAccountService.updateSoldOfAppAccount(senderId, -amount);
+        appAccountService.updateSoldOfAppAccount(receiverId, amount);
+    }
+
+    private AppTransaction createTransaction(Long senderId, Long receiverId, Double amount) {
+        return new AppTransaction(senderId, receiverId, LocalDateTime.now(), amount);
+    }
+
+    private void saveFees(AppTransaction savedAppTransaction) {
+        double feeToPerceive = calculateFee(savedAppTransaction.getAmount());
+        Fees fees = new Fees(
+                null,
+                savedAppTransaction.getId(),
+                savedAppTransaction.getLocalDateTime(),
+                feeToPerceive
+        );
+        feeRepository.save(fees);
+    }
+
+
 
     public List<TransactionDTO> getListOfAppTransactionForCurrentUser() {
         Long userId = idOfUserAuthenticationService.getUserId();
