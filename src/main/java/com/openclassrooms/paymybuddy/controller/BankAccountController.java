@@ -3,8 +3,12 @@ package com.openclassrooms.paymybuddy.controller;
 import com.openclassrooms.paymybuddy.model.BankAccount;
 import com.openclassrooms.paymybuddy.service.BankAccountService;
 import com.openclassrooms.paymybuddy.service.BankTransactionService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,11 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class BankAccountController {
 
     private final BankAccountService bankAccountService;
-    private final BankTransactionService bankTransactionService;
 
-    public BankAccountController(BankAccountService bankAccountService, BankTransactionService bankTransactionService) {
+    private static final Logger logger = LogManager.getLogger(BankAccountController.class);
+
+
+    public BankAccountController(BankAccountService bankAccountService) {
         this.bankAccountService = bankAccountService;
-        this.bankTransactionService = bankTransactionService;
     }
 
     @PostMapping("/add")
@@ -27,6 +32,7 @@ public class BankAccountController {
             bankAccountService.addingBankAccountInformation(bankAccount);
             return ResponseEntity.ok("Account created.");
         } catch (RuntimeException e) {
+            logger.error("An error occurred while adding bank account information for user " + SecurityContextHolder.getContext().getAuthentication().getName() + ". "  + e);
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(e.toString());
         }
     }

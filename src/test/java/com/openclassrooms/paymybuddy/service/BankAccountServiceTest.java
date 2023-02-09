@@ -55,8 +55,104 @@ class BankAccountServiceTest {
     }
 
     @Test
-    void addingBankAccountInformationShouldThrow() {
+    void addingBankAccountInformationShouldThrowWhenBankAccountIsPresent() {
         Optional<BankAccount> optionalBankAccount = Optional.of(bankAccount);
+        when(bankAccountRepository.findByUsernameEquals(any())).thenReturn(optionalBankAccount);
+        assertThrows(IllegalArgumentException.class, () -> underTest.addingBankAccountInformation(bankAccount));
+    }
+
+    @Test
+    void addingBankAccountInformationShouldThrowWhenIbanIsNull() {
+        bankAccount = new BankAccount(
+                "1234567",
+                null,
+                "CB123",
+                12,
+                222,
+                987,
+                "antoine"
+        );
+        Optional<BankAccount> optionalBankAccount = Optional.empty();
+        when(bankAccountRepository.findByUsernameEquals(any())).thenReturn(optionalBankAccount);
+        assertThrows(IllegalArgumentException.class, () -> underTest.addingBankAccountInformation(bankAccount));
+    }
+
+    @Test
+    void addingBankAccountInformationShouldThrowWhenAccountNumberIsNull() {
+        bankAccount = new BankAccount(
+                null,
+                "fhzeu",
+                "CB123",
+                12,
+                222,
+                987,
+                "antoine"
+        );
+        Optional<BankAccount> optionalBankAccount = Optional.empty();
+        when(bankAccountRepository.findByUsernameEquals(any())).thenReturn(optionalBankAccount);
+        assertThrows(IllegalArgumentException.class, () -> underTest.addingBankAccountInformation(bankAccount));
+    }
+
+    @Test
+    void addingBankAccountInformationShouldThrowWhenSwiftIsNull() {
+        bankAccount = new BankAccount(
+                "fhuer",
+                "fheu",
+                null,
+                12,
+                222,
+                987,
+                "antoine"
+        );
+        Optional<BankAccount> optionalBankAccount = Optional.empty();
+        when(bankAccountRepository.findByUsernameEquals(any())).thenReturn(optionalBankAccount);
+        assertThrows(IllegalArgumentException.class, () -> underTest.addingBankAccountInformation(bankAccount));
+    }
+
+    @Test
+    void addingBankAccountInformationShouldThrowWhenBankCodeIsNull() {
+        bankAccount = new BankAccount(
+                "fhuze",
+                "fhue",
+                "fheuz",
+                null,
+                222,
+                987,
+                "antoine"
+        );
+        Optional<BankAccount> optionalBankAccount = Optional.empty();
+        when(bankAccountRepository.findByUsernameEquals(any())).thenReturn(optionalBankAccount);
+        assertThrows(IllegalArgumentException.class, () -> underTest.addingBankAccountInformation(bankAccount));
+    }
+
+    @Test
+    void addingBankAccountInformationShouldThrowWhenCounterCodeIsNull() {
+        bankAccount = new BankAccount(
+                "hfeu",
+                "fhuezi",
+                "fez",
+                123,
+                null,
+                987,
+                "antoine"
+        );
+        Optional<BankAccount> optionalBankAccount = Optional.empty();
+        when(bankAccountRepository.findByUsernameEquals(any())).thenReturn(optionalBankAccount);
+        assertThrows(IllegalArgumentException.class, () -> underTest.addingBankAccountInformation(bankAccount));
+    }
+
+    @Test
+    void addingBankAccountInformationShouldThrowWhenRibKeyIsNull() {
+        bankAccount = new BankAccount(
+                "fezfez",
+                "fezfze",
+                "gregze",
+                12,
+                123,
+                null,
+                "antoine"
+        );
+        Optional<BankAccount> optionalBankAccount = Optional.empty();
         when(bankAccountRepository.findByUsernameEquals(any())).thenReturn(optionalBankAccount);
         assertThrows(IllegalArgumentException.class, () -> underTest.addingBankAccountInformation(bankAccount));
     }

@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,7 +52,9 @@ class UserRelationsServiceTest {
 
     @Test
     void addAFriend() {
+        when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
         when(userAuthenticationService.findIdOfUserByUsername("mustang")).thenReturn(new UserAuthentication(2L, "mustang", "password"));
+        when(userRelationsRepository.findUserRelationsByFriendIdEqualsAndUserIdEquals(2L, 1L)).thenReturn(Optional.empty());
         UserRelations addAFriend = underTest.addAFriend("mustang");
         UserRelations toCompare = new UserRelations(1L, 1L, 2L);
         assertEquals(addAFriend.getFriendId(), toCompare.getFriendId());
@@ -59,10 +62,11 @@ class UserRelationsServiceTest {
 
     @Test
     void addAFriendShouldThrow() {
-        Optional<UserRelations> userRelations = Optional.of(new UserRelations(1L));
-        when(userAuthenticationService.findIdOfUserByUsername("mustang")).thenReturn(new UserAuthentication(2L, "mustang", "password"));
+        Optional<UserRelations> userRelations = Optional.of(new UserRelations(1L, 2L, 3L));
+        when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
+        when(userAuthenticationService.findIdOfUserByUsername(anyString())).thenReturn(new UserAuthentication(2L, "mustang", "password"));
         when(userRelationsRepository.findUserRelationsByFriendIdEqualsAndUserIdEquals(any(), any())).thenReturn(userRelations);
-        assertThrows(RuntimeException.class, () -> underTest.addAFriend("antoine"));
+        assertThrows(IllegalArgumentException.class, () -> underTest.addAFriend("antoine"));
     }
 
     @Test

@@ -21,14 +21,32 @@ public class BankAccountService {
         this.bankAccountRepository = bankAccountRepository;
     }
 
-    public void addingBankAccountInformation(BankAccount bankAccount) {
+    public boolean addingBankAccountInformation(BankAccount bankAccount) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (bankAccountRepository.findByUsernameEquals(username).isPresent()) {
+        Optional<BankAccount> existingBankAccount = bankAccountRepository.findByUsernameEquals(username);
+
+        if (existingBankAccount.isPresent()) {
             throw new IllegalArgumentException("Bank account already exists for user: " + username);
         }
-        bankAccount.setUsername(username);
-        bankAccountRepository.save(bankAccount);
+
+        if (areBankDetailsValid(bankAccount)) {
+            bankAccount.setUsername(username);
+            bankAccountRepository.save(bankAccount);
+            return true;
+        } else {
+            throw new IllegalArgumentException("Invalid bank details");
+        }
     }
+
+    private boolean areBankDetailsValid(BankAccount bankAccount) {
+        return bankAccount.getIban() != null
+                && bankAccount.getBankCode() != null
+                && bankAccount.getAccountNumber() != null
+                && bankAccount.getSwift() != null
+                && bankAccount.getRibKey() != null
+                && bankAccount.getCounterCode() != null;
+    }
+
 
 
     public Boolean bankAccountInformationArePresentOrNot() {

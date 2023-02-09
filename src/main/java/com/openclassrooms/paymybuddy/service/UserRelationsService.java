@@ -41,20 +41,23 @@ public class UserRelationsService {
     public UserRelations addAFriend (String email) {
         Long userId = idOfUserAuthenticationService.getUserId();
         Long friendId = userAuthenticationService.findIdOfUserByUsername(email).getId();
-        return userRelationsRepository.findUserRelationsByFriendIdEqualsAndUserIdEquals(friendId, userId)
-                .orElseGet(() -> {
-                    UserRelations newUserRelations = new UserRelations(userId, friendId);
-                    userRelationsRepository.save(newUserRelations);
-                    return newUserRelations;
-                });
+
+        Optional <UserRelations> userRelations = userRelationsRepository.findUserRelationsByFriendIdEqualsAndUserIdEquals(friendId, userId);
+        if (userRelations.isPresent()) {
+            throw new IllegalArgumentException("Relation already exist");
+        }
+        UserRelations newUserRelations = new UserRelations(userId, friendId);
+        userRelationsRepository.save(newUserRelations);
+        return newUserRelations;
     }
 
-    public void deleteAFriend(Long friendId) {
+    public boolean deleteAFriend(Long friendId) {
         Long userId = idOfUserAuthenticationService.getUserId();
         UserRelations relations = userRelationsRepository
                 .findUserRelationsByUserIdEqualsAndFriendIdEquals(userId, friendId)
                 .orElseThrow(() -> new RuntimeException("Relation is not present."));
         userRelationsRepository.delete(relations);
+        return true;
     }
 
 
