@@ -42,6 +42,7 @@ class BankAccountTransactionControllerTest {
     }
 
     @Test
+    @WithMockUser(value = "spring")
     void makeANewTransactionFromBankAccountToAppAccount() throws Exception {
         when(bankTransactionService.makeANewTransactionFromBankAccountToAppAccount(10.1)).thenReturn(new BankTransaction());
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/banktransaction/to?amount=10.1"))

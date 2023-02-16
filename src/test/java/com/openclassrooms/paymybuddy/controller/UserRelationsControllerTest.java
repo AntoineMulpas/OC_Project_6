@@ -35,6 +35,7 @@ class UserRelationsControllerTest {
     }
 
     @Test
+    @WithMockUser(value = "spring")
     void getListOfUserRelations() throws Exception {
         when(userRelationsService.getListOfUserRelations()).thenReturn(List.of(new UserRelationsDTO(1L, "antoine", "antoine")));
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/relations/list"))
@@ -50,6 +51,7 @@ class UserRelationsControllerTest {
     }
 
     @Test
+    @WithMockUser(value = "spring")
     void addAFriend() throws Exception {
         when(userRelationsService.addAFriend(anyString())).thenReturn(new UserRelations(1L));
         mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/relations/add?email=antoine"))
@@ -65,6 +67,7 @@ class UserRelationsControllerTest {
     }
 
     @Test
+    @WithMockUser(value = "spring")
     void deleteAFriend() throws Exception {
         when(userRelationsService.deleteAFriend(1L)).thenReturn(true);
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/relations/delete?friendId=1"))
