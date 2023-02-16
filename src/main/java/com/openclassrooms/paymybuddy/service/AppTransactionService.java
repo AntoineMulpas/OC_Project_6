@@ -25,7 +25,6 @@ public class AppTransactionService {
     private final AppAccountService appAccountService;
     private final IdOfUserAuthenticationService idOfUserAuthenticationService;
     private final UserService userService;
-
     private final FeeRepository feeRepository;
 
     @Autowired

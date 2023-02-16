@@ -25,9 +25,7 @@ public class BankTransactionService {
 
     private final BankTransactionRepository bankTransactionRepository;
     private final IdOfUserAuthenticationService idOfUserAuthenticationService;
-
     private final AppAccountRepository appAccountRepository;
-
     private final FeeRepository feeRepository;
 
     @Autowired

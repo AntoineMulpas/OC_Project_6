@@ -33,6 +33,7 @@ private static final Logger logger = LogManager.getLogger(AppTransactionControll
         try {
             Long idToPass = Long.parseLong(receiverId);
             AppTransaction appTransaction = appTransactionService.makeANewAppTransaction(idToPass, amount);
+            logger.info("User: " + SecurityContextHolder.getContext().getAuthentication().getName() + " has requested a new AppTransaction to " + receiverId);
             return ResponseEntity.ok().body(appTransaction);
         } catch (RuntimeException e) {
             logger.error("An error occurred while making a new app transaction for user:  " + SecurityContextHolder.getContext().getAuthentication().getName() + ". " + e);
