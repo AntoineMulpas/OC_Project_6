@@ -19,7 +19,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserAuthRepository userAuthRepository;
 
-    private static final Logger logger = LogManager.getLogger(UserRelationsService.class);
+    private static final Logger logger = LogManager.getLogger(UserService.class);
 
 
     public UserService(UserRepository userRepository, UserAuthRepository userAuthRepository) {
