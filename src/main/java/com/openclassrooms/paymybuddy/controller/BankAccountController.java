@@ -30,6 +30,7 @@ public class BankAccountController {
             ) {
         try {
             bankAccountService.addingBankAccountInformation(bankAccount);
+            logger.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " has added bank account information.");
             return ResponseEntity.ok("Account created.");
         } catch (RuntimeException e) {
             logger.error("An error occurred while adding bank account information for user " + SecurityContextHolder.getContext().getAuthentication().getName() + ". "  + e);

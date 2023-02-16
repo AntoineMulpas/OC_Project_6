@@ -1,7 +1,10 @@
 package com.openclassrooms.paymybuddy.service;
 
+import com.openclassrooms.paymybuddy.controller.AppAccountController;
 import com.openclassrooms.paymybuddy.model.BankAccount;
 import com.openclassrooms.paymybuddy.repository.BankAccountRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +18,8 @@ import java.util.Optional;
 public class BankAccountService {
 
     private final BankAccountRepository bankAccountRepository;
+    private static final Logger logger = LogManager.getLogger(BankAccountService.class);
+
 
     @Autowired
     public BankAccountService(BankAccountRepository bankAccountRepository) {
@@ -26,14 +31,17 @@ public class BankAccountService {
         Optional<BankAccount> existingBankAccount = bankAccountRepository.findByUsernameEquals(username);
 
         if (existingBankAccount.isPresent()) {
+            logger.error("Bank account information are already present for user " + SecurityContextHolder.getContext().getAuthentication().getName());
             throw new IllegalArgumentException("Bank account already exists for user: " + username);
         }
 
         if (areBankDetailsValid(bankAccount)) {
             bankAccount.setUsername(username);
             bankAccountRepository.save(bankAccount);
+            logger.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " has successfully saved bank information.");
             return true;
         } else {
+            logger.error("Invalid bank details for user " + SecurityContextHolder.getContext().getAuthentication().getName());
             throw new IllegalArgumentException("Invalid bank details");
         }
     }

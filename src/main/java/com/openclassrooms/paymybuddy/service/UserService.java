@@ -5,6 +5,8 @@ import com.openclassrooms.paymybuddy.model.UserAuthentication;
 import com.openclassrooms.paymybuddy.model.UserDTO;
 import com.openclassrooms.paymybuddy.repository.UserAuthRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserAuthRepository userAuthRepository;
+
+    private static final Logger logger = LogManager.getLogger(UserRelationsService.class);
+
 
     public UserService(UserRepository userRepository, UserAuthRepository userAuthRepository) {
         this.userRepository = userRepository;
@@ -41,8 +46,10 @@ public class UserService {
                     user.getBirthday()
             );
             userRepository.save(userToSave);
+            logger.info(SecurityContextHolder.getContext().getAuthentication().getName() + " has successfully saved his information.");
             return userToSave;
         } else {
+            logger.error("User information are already present for user " + SecurityContextHolder.getContext().getAuthentication().getName());
             throw new RuntimeException("User already exists.");
         }
     }
@@ -50,6 +57,7 @@ public class UserService {
     public UserDTO getCurrentUserInformation() {
         String currentUser = getCurrentUser();
         Optional <User> userByUserAuthenticationEquals = userRepository.findUserByUserAuthenticationEquals(currentUser);
+        logger.info(currentUser + " has fetched his information.");
         return userByUserAuthenticationEquals.map(user -> new UserDTO(
                 user.getFirstName(),
                 user.getLastName(),
@@ -71,6 +79,7 @@ public class UserService {
             if (user.isPresent()) {
                 return user.get();
             } else {
+                logger.error("User with id: " + id + " not found.");
                 throw new UsernameNotFoundException("User with id: " + id + " not found.");
             }
         }

@@ -1,12 +1,16 @@
 package com.openclassrooms.paymybuddy.service;
 
+import com.openclassrooms.paymybuddy.controller.AppAccountController;
 import com.openclassrooms.paymybuddy.model.AppTransaction;
 import com.openclassrooms.paymybuddy.model.Fees;
 import com.openclassrooms.paymybuddy.model.TransactionDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.AppTransactionRepository;
 import com.openclassrooms.paymybuddy.repository.FeeRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,6 +31,9 @@ public class AppTransactionService {
     private final UserService userService;
     private final FeeRepository feeRepository;
 
+    private static final Logger logger = LogManager.getLogger(AppTransactionService.class);
+
+
     @Autowired
     public AppTransactionService(AppTransactionRepository appTransactionRepository, AppAccountService appAccountService, IdOfUserAuthenticationService idOfUserAuthenticationService, UserService userService, FeeRepository feeRepository) {
         this.appTransactionRepository = appTransactionRepository;
@@ -44,14 +51,17 @@ public class AppTransactionService {
         AppTransaction transactionToSave = createTransaction(senderId, receiverId, amount);
         AppTransaction savedAppTransaction = appTransactionRepository.save(transactionToSave);
         saveFees(savedAppTransaction);
+        logger.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " has made a new AppTransaction to " + receiverId);
         return savedAppTransaction;
     }
 
     private void validateTransaction(Long receiverId, Double amount) {
         if (receiverId == null || amount == null || amount <= 0) {
+            logger.error("Invalid receiverId or amount error for user " + SecurityContextHolder.getContext().getAuthentication().getName() + " while making a new AppTransaction.") ;
             throw new IllegalArgumentException("Invalid receiverId or amount.");
         }
         if (!idOfUserAuthenticationService.userIdExists(receiverId)) {
+            logger.error("Receiver id does not exist error for user " + SecurityContextHolder.getContext().getAuthentication().getName() + " while making a new AppTransaction.") ;
             throw new IllegalArgumentException("Receiver id does not exist.");
         }
     }
@@ -59,6 +69,7 @@ public class AppTransactionService {
     private void checkFunds(Double amount) {
         Double actualSoldOfSenderId = appAccountService.getSoldOfAccount();
         if (actualSoldOfSenderId - amount < 0) {
+            logger.error("Not enough funds for AppTransaction for user " + SecurityContextHolder.getContext().getAuthentication().getName());
             throw new IllegalArgumentException("You don't have enough funds to make this transaction.");
         }
     }

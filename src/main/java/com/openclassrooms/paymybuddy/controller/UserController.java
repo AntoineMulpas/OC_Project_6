@@ -31,6 +31,7 @@ public class UserController {
     ) {
         try {
             User user1 = userService.saveInformationOfAUser(user);
+            logger.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " has saved his information");
             return new ResponseEntity <>(user1, HttpStatus.OK);
         } catch (RuntimeException e) {
             logger.error("An error occurred while saving information regarding new user: " + user.getUserAuthentication() + ". "  +e);
@@ -42,6 +43,7 @@ public class UserController {
     public ResponseEntity<UserDTO> getCurrentUserInformation() {
         try {
             UserDTO currentUserInformation = userService.getCurrentUserInformation();
+            logger.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " fetched his information.");
             return new ResponseEntity<>(currentUserInformation, HttpStatus.OK);
         } catch (RuntimeException e) {
             logger.error("An error occurred while fetching current user information for user: " + SecurityContextHolder.getContext().getAuthentication().getName() + ". "  + e);
@@ -53,6 +55,7 @@ public class UserController {
     public ResponseEntity<Boolean> isCurrentUserInformationSaved() {
         try {
             Boolean currentUserInformationSaved = userService.isCurrentUserInformationSaved();
+            logger.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " has verified if his information are present.");
             return new ResponseEntity <>(currentUserInformationSaved, HttpStatus.OK);
         } catch (RuntimeException e) {
             logger.error("An error occurred while finding if current user information are already saved: " + SecurityContextHolder.getContext().getAuthentication().getName() + ". " + e);

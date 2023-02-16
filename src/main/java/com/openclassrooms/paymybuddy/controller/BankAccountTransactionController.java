@@ -30,6 +30,7 @@ public class BankAccountTransactionController {
     ) {
         try {
             bankTransactionService.makeANewTransactionFromAppAccountToBankAccount(amount);
+            logger.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " has made a new transaction from AppAccount to BankAccount.");
             return ResponseEntity.ok().body("Transaction to bank of " + amount + " made with success.");
         } catch (RuntimeException e) {
             logger.error("An error occurred while making transaction from AppAccount to BankAccount for user " + SecurityContextHolder.getContext().getAuthentication().getName() + ". " + e);
@@ -44,6 +45,7 @@ public class BankAccountTransactionController {
     ) {
         try {
             bankTransactionService.makeANewTransactionFromBankAccountToAppAccount(amount);
+            logger.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " has made a new transaction from BankAccount to AppAccount.");
             return ResponseEntity.ok().body("Transaction to app of " + amount + " made with success.");
         } catch (RuntimeException e) {
             logger.error("An error occurred while making transaction from BankAccount to AppAccount for user " + SecurityContextHolder.getContext().getAuthentication().getName() + ". " + e);
