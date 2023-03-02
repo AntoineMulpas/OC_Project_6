@@ -17,12 +17,11 @@ public class AppSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf().disable()
-                .cors()
-                .and()
+                .cors().disable()
                 .authorizeHttpRequests()
                     .antMatchers("/css/**").permitAll()
                     .antMatchers(HttpMethod.GET, "/login", "/signup", "/login-error.html").permitAll()
-                    .antMatchers(HttpMethod.POST, "/api/v1/authentication/add").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/v1/authentication/add", "/signup").permitAll()
                 .anyRequest().authenticated()
                 .and()
                     .formLogin()

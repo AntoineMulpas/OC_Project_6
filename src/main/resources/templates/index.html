@@ -10,7 +10,8 @@
 </head>
 <body>
 <div class="home-container">
-    <div th:insert="menu">...</div>
+    <div th:if="${menuToDisplay}" th:insert="menu">...</div>
+    <div th:unless="${menuToDisplay}" th:insert="menu-ok"></div>
     <div class="main-content">
         <div class="card main-content-card">
             <h1>Welcome to PayMyBuddy</h1>

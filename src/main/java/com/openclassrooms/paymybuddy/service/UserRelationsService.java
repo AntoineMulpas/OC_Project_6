@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -48,17 +49,29 @@ public class UserRelationsService {
 
     public UserRelations addAFriend (String email) {
         Long userId = idOfUserAuthenticationService.getUserId();
-        Long friendId = userAuthenticationService.findIdOfUserByUsername(email).getId();
+        try {
+            Long friendId = userAuthenticationService.findIdOfUserByUsername(email).getId();
 
-        Optional <UserRelations> userRelations = userRelationsRepository.findUserRelationsByFriendIdEqualsAndUserIdEquals(friendId, userId);
-        if (userRelations.isPresent()) {
-            logger.error("Relation already exist for " + SecurityContextHolder.getContext().getAuthentication().getName() + " and " + email);
-            throw new IllegalArgumentException("Relation already exist");
+            Optional <UserRelations> userRelations = userRelationsRepository.findUserRelationsByFriendIdEqualsAndUserIdEquals(friendId, userId);
+            if (userRelations.isPresent()) {
+                logger.error("Relation already exist for " + SecurityContextHolder.getContext().getAuthentication().getName() + " and " + email);
+                throw new IllegalArgumentException("Relation already exist");
+            }
+
+            try {
+                User userInformation = userService.getUserInformation(friendId);
+                UserRelations newUserRelations = new UserRelations(userId, friendId);
+                userRelationsRepository.save(newUserRelations);
+                logger.info("User " + userId + " has been successfully added new relation with id " + friendId);
+                return newUserRelations;
+            } catch (RuntimeException e) {
+                logger.error("User information for user: " + email + " are not present. Cannot add user: " + e);
+                return null;
+            }
+        } catch (UsernameNotFoundException e) {
+            logger.error("User does not exist for username: " + email);
+            return null;
         }
-        UserRelations newUserRelations = new UserRelations(userId, friendId);
-        userRelationsRepository.save(newUserRelations);
-        logger.info("User " + userId + " has been successfully added new relation with id " + friendId);
-        return newUserRelations;
     }
 
     public boolean deleteAFriend(Long friendId) {

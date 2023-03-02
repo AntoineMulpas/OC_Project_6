@@ -1,12 +1,10 @@
 package com.openclassrooms.paymybuddy.service;
 
-import com.openclassrooms.paymybuddy.controller.AppAccountController;
 import com.openclassrooms.paymybuddy.model.BankAccount;
 import com.openclassrooms.paymybuddy.repository.BankAccountRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -48,11 +46,7 @@ public class BankAccountService {
 
     private boolean areBankDetailsValid(BankAccount bankAccount) {
         return bankAccount.getIban() != null
-                && bankAccount.getBankCode() != null
-                && bankAccount.getAccountNumber() != null
-                && bankAccount.getSwift() != null
-                && bankAccount.getRibKey() != null
-                && bankAccount.getCounterCode() != null;
+                && bankAccount.getSwift() != null;
     }
 
 

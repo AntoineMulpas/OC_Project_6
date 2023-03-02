@@ -6,14 +6,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.internal.verification.Times;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -78,22 +78,6 @@ class BankAccountServiceTest {
     }
 
     @Test
-    void addingBankAccountInformationShouldThrowWhenAccountNumberIsNull() {
-        bankAccount = new BankAccount(
-                null,
-                "fhzeu",
-                "CB123",
-                12,
-                222,
-                987,
-                "antoine"
-        );
-        Optional<BankAccount> optionalBankAccount = Optional.empty();
-        when(bankAccountRepository.findByUsernameEquals(any())).thenReturn(optionalBankAccount);
-        assertThrows(IllegalArgumentException.class, () -> underTest.addingBankAccountInformation(bankAccount));
-    }
-
-    @Test
     void addingBankAccountInformationShouldThrowWhenSwiftIsNull() {
         bankAccount = new BankAccount(
                 "fhuer",
@@ -109,53 +93,6 @@ class BankAccountServiceTest {
         assertThrows(IllegalArgumentException.class, () -> underTest.addingBankAccountInformation(bankAccount));
     }
 
-    @Test
-    void addingBankAccountInformationShouldThrowWhenBankCodeIsNull() {
-        bankAccount = new BankAccount(
-                "fhuze",
-                "fhue",
-                "fheuz",
-                null,
-                222,
-                987,
-                "antoine"
-        );
-        Optional<BankAccount> optionalBankAccount = Optional.empty();
-        when(bankAccountRepository.findByUsernameEquals(any())).thenReturn(optionalBankAccount);
-        assertThrows(IllegalArgumentException.class, () -> underTest.addingBankAccountInformation(bankAccount));
-    }
-
-    @Test
-    void addingBankAccountInformationShouldThrowWhenCounterCodeIsNull() {
-        bankAccount = new BankAccount(
-                "hfeu",
-                "fhuezi",
-                "fez",
-                123,
-                null,
-                987,
-                "antoine"
-        );
-        Optional<BankAccount> optionalBankAccount = Optional.empty();
-        when(bankAccountRepository.findByUsernameEquals(any())).thenReturn(optionalBankAccount);
-        assertThrows(IllegalArgumentException.class, () -> underTest.addingBankAccountInformation(bankAccount));
-    }
-
-    @Test
-    void addingBankAccountInformationShouldThrowWhenRibKeyIsNull() {
-        bankAccount = new BankAccount(
-                "fezfez",
-                "fezfze",
-                "gregze",
-                12,
-                123,
-                null,
-                "antoine"
-        );
-        Optional<BankAccount> optionalBankAccount = Optional.empty();
-        when(bankAccountRepository.findByUsernameEquals(any())).thenReturn(optionalBankAccount);
-        assertThrows(IllegalArgumentException.class, () -> underTest.addingBankAccountInformation(bankAccount));
-    }
 
     @Test
     void bankAccountInformationArePresentOrNotShouldReturnFalse() {

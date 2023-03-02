@@ -13,7 +13,6 @@ public class HomeController {
 
     private final UserService userService;
     private final BankAccountService bankAccountService;
-
     private final AppAccountService appAccountService;
 
     @Autowired
@@ -26,9 +25,22 @@ public class HomeController {
     @GetMapping("/home")
     public String getHomePage(Model model) {
         model.addAttribute("pageName", "Home");
-        model.addAttribute("userIsPresent", userService.isCurrentUserInformationSaved());
-        model.addAttribute("bankAccountIsPresent", bankAccountService.bankAccountInformationArePresentOrNot());
+        if (userService.isCurrentUserInformationSaved()) {
+            model.addAttribute("userIsPresent", true);
+        } else {
+            model.addAttribute("userIsPresent", false);
+        }
+        if (bankAccountService.bankAccountInformationArePresentOrNot()) {
+            model.addAttribute("bankAccountIsPresent", true);
+        } else {
+            model.addAttribute("bankAccountIsPresent", false);
+        }
         model.addAttribute("sold", appAccountService.getSoldOfAccount());
+        if (userService.isCurrentUserInformationSaved() && bankAccountService.bankAccountInformationArePresentOrNot()) {
+            model.addAttribute("menuToDisplay", true);
+        } else {
+            model.addAttribute("menuToDisplay", false);
+        }
         return "index";
     }
 

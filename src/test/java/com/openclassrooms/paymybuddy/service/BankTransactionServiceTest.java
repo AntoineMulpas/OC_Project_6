@@ -5,12 +5,18 @@ import com.openclassrooms.paymybuddy.model.BankTransaction;
 import com.openclassrooms.paymybuddy.repository.AppAccountRepository;
 import com.openclassrooms.paymybuddy.repository.BankTransactionRepository;
 import com.openclassrooms.paymybuddy.repository.FeeRepository;
+import com.openclassrooms.paymybuddy.repository.UserAuthRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +27,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration
 class BankTransactionServiceTest {
 
     private BankTransactionService underTest;
@@ -30,7 +38,6 @@ class BankTransactionServiceTest {
     IdOfUserAuthenticationService idOfUserAuthenticationService;
     @Mock
     AppAccountRepository appAccountRepository;
-
     @Mock
     FeeRepository feeRepository;
 
@@ -40,6 +47,7 @@ class BankTransactionServiceTest {
     }
 
     @Test
+    @WithMockUser(value = "spring")
     void makeANewTransactionFromAppAccountToBankAccount() {
         Optional<AppAccount> optionalAppAccount = Optional.of(new AppAccount(1L, 20.3, 1L));
         when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
@@ -57,6 +65,7 @@ class BankTransactionServiceTest {
     }
 
     @Test
+    @WithMockUser(value = "spring")
     void makeANewTransactionFromAppAccountToBankAccountShouldThrowIfNewSoldIsNegative() {
         Optional<AppAccount> optionalAppAccount = Optional.of(new AppAccount(1L, 20.3, 1L));
         when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
@@ -85,6 +94,7 @@ class BankTransactionServiceTest {
     }
 
     @Test
+    @WithMockUser(value = "spring")
     void makeANewTransactionFromBankAccountToAppAccount() {
         when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
         Optional<AppAccount> optionalAppAccount = Optional.of(new AppAccount(1L, 100.1, 1L));
@@ -124,6 +134,7 @@ class BankTransactionServiceTest {
     }
 
     @Test
+    @WithMockUser(value = "spring")
     void getListOfBankTransactionForCurrentUser() {
         List<BankTransaction> mockedList = List.of(new BankTransaction(1L, LocalDateTime.now(), 12.2));
         when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);

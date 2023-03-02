@@ -65,6 +65,7 @@
     })
             .then(res => res.text())
             .then(() => openNewWindow())
+            .catch(error => console.log(error))
   }
 
   const openNewWindow = () => {

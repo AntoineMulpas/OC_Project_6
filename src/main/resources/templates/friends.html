@@ -13,11 +13,15 @@
     <div class="friendList-container">
         <div class="card friendList">
             <h1>Add a friend</h1>
-            <input type="text" id="emailId" class="form-control" placeholder="Email">
-            <button class="btn btn-secondary addFriendButton" th:onclick="addFriend()">Add</button>
+            <h2 th:text="${errorMessage}"></h2>
+            <form th:action="@{/friends}" th:method="post" th:object="${user}">
+                <input type="text" th:field="*{userAuthentication}">
+                <button class="btn btn-secondary addFriendButton">Add</button>
+            </form>
         </div>
         <div class="friendList card">
             <h1>List of friends</h1>
+            <h3 th:text="${deleteMessage}"></h3>
             <table class="table">
                 <thead>
                     <th>Firstname</th>
@@ -27,33 +31,20 @@
                     <tr th:each="relation : ${relations}">
                         <td><span th:text="${relation.firstName}"></span></td>
                         <td><span th:text="${relation.lastName}"></span></td>
-                        <td><button class="btn btn-secondary" th:data-name="${relation.id}" th:onclick="deleteFriend(this.getAttribute('data-name'))">Delete</button></td>
+                        <td>
+                            <form th:action="@{/friends/delete}" th:method="post" th:object="${userRelation}">
+                                <input type="hidden" name="id" th:value="${relation.id}" />
+                                <button class="btn btn-secondary" type="submit">Delete</button>
+                            </form>
+
+                        </td>
+
                     </tr>
                 </tbody>
             </table>
 
         </div>
     </div>
-            <script th:inline="javascript">
-                const deleteFriend = (id) => {
-                    fetch("http://localhost:8080/api/v1/relations/delete?friendId=" + id, {method: 'DELETE'})
-                        .then(() => window.open("http://localhost:8080/friends", "_self"))
-                }
-
-                const addFriend = () => {
-                    let email = document.getElementById("emailId").value
-                    fetch("http://localhost:8080/api/v1/relations/add?email=" + email, {method: 'POST'})
-                        .then((res) => {
-                            if (res.status === 200)
-                                window.open("http://localhost:8080/friends", "_self")
-                            else if (res.status === 417)
-                                alert("This user doesn't exist.")
-                            else
-                                alert("This user is already in your relation.")
-                        })
-                }
-            </script>
-
 </body>
 </html>
 
