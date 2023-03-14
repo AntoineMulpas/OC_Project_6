@@ -33,4 +33,12 @@ public class AppTransaction {
         this.localDateTime = localDateTime;
         this.amount = amount;
     }
+
+    public AppTransaction(Double amount) {
+        this.amount = amount;
+    }
+
+    public AppTransaction(Long receiverId) {
+        this.receiverId = receiverId;
+    }
 }
