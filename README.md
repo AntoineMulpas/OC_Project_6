@@ -1,4 +1,4 @@
-# OC_Project_6!
+# OC_Project_6
 OpenClassrooms Projet 6 - Pay My Buddy
 
 Diagramme de classe: 
