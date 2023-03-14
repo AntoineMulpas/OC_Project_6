@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/api/v1/authentication")
+//@RestController
+//@RequestMapping("/api/v1/authentication")
 public class UserAuthenticationController {
+
+    /*
 
     private final UserAuthenticationService userAuthenticationService;
 
@@ -30,7 +32,7 @@ public class UserAuthenticationController {
     public ResponseEntity<UserAuthentication> saveANewUser(@RequestBody UserAuthentication userAuth) {
         try {
             UserAuthentication userAuthentication = userAuthenticationService.saveAUser(userAuth);
-            logger.info("New user has been saved: " + userAuth.getUsername());
+            logger.info("New user has been saved: " + userAuthentication.getUsername());
             return ResponseEntity.ok().body(userAuthentication);
         } catch (RuntimeException e) {
             logger.error("An error occurred while saving new user. " + e);
@@ -38,4 +40,6 @@ public class UserAuthenticationController {
         }
     }
 
+
+     */
 }

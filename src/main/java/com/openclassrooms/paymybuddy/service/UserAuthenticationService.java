@@ -1,6 +1,5 @@
 package com.openclassrooms.paymybuddy.service;
 
-import com.openclassrooms.paymybuddy.controller.AppAccountController;
 import com.openclassrooms.paymybuddy.model.UserAuthentication;
 import com.openclassrooms.paymybuddy.repository.UserAuthRepository;
 import org.apache.logging.log4j.LogManager;

@@ -48,7 +48,7 @@ public class BankAccountTLController {
         model.addAttribute("checkbox", new CheckBox());
         Double amount = bankTransaction.getAmount();
 
-        if (amount <= 0) {
+        if (amount != null && amount <= 0) {
             model.addAttribute("message", "Error, the amount should be superior to 0.");
         } else if (checkBox.isToBank() && checkBox.isToApp()) {
             model.addAttribute("message", "Error, choose only one element in the checkbox or at least one.");

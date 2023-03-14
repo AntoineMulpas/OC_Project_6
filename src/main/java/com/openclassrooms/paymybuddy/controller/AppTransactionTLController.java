@@ -48,7 +48,7 @@ public class AppTransactionTLController {
         model.addAttribute("transfer", new AppTransaction());
         Double amount = appTransaction.getAmount();
         Long receiverId = appTransaction.getReceiverId();
-        if (amount > 0 && receiverId != null) {
+        if (amount != null && amount > 0 && receiverId != null) {
             try {
                 appTransactionService.makeANewAppTransaction(receiverId, amount);
                 model.addAttribute("message", "You send " + amount + "€ to your friend.");
@@ -63,5 +63,7 @@ public class AppTransactionTLController {
         model.addAttribute("sold", appAccountService.getSoldOfAccount());
         return "app-transfer";
     }
+
+
 
 }

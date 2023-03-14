@@ -39,7 +39,7 @@ public class UserRelationsIT {
 
     @Test
     void getListOfUserRelations() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/relations/list"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/friends"))
                 .andExpect(status().isOk());
     }
 
@@ -49,34 +49,18 @@ public class UserRelationsIT {
         when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
         when(userAuthenticationService.findIdOfUserByUsername(any())).thenReturn(new UserAuthentication(1L, "fjizeo", "jfizo"));
         when(userRelationsRepository.findUserRelationsByFriendIdEqualsAndUserIdEquals(2L, 1L)).thenReturn(Optional.empty());
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/relations/add?email=antoine"))
+        mockMvc.perform(MockMvcRequestBuilders.post("/friends"))
                 .andExpect(status().isOk());
     }
 
-    @Test
-    @WithMockUser(value = "spring")
-    void addAFriendShouldReturnExpectationFailed() throws Exception {
-        when(idOfUserAuthenticationService.getUserId()).thenReturn(1L);
-        when(userAuthenticationService.findIdOfUserByUsername(any())).thenReturn(new UserAuthentication(1L, "fjizeo", "jfizo"));
-        when(userRelationsRepository.findUserRelationsByFriendIdEqualsAndUserIdEquals(any(), any())).thenReturn(Optional.of(new UserRelations()));
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/v1/relations/add?email=antoine"))
-                .andExpect(status().isExpectationFailed());
-    }
 
     @Test
     @WithMockUser(value = "spring")
     void deleteAFriend() throws Exception {
         when(idOfUserAuthenticationService.getUserId()).thenReturn(2L);
         when(userRelationsRepository.findUserRelationsByUserIdEqualsAndFriendIdEquals(2L, 1L)).thenReturn(Optional.of(new UserRelations(2L)));
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/relations/delete?friendId=1"))
+        mockMvc.perform(MockMvcRequestBuilders.post("/friends/delete?id=1"))
                 .andExpect(status().isOk());
-    }
-
-    @Test
-    @WithMockUser(value = "spring")
-    void deleteAFriendShouldReturnExpectationFailed() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/relations/delete?friendId=1"))
-                .andExpect(status().isExpectationFailed());
     }
 
 }

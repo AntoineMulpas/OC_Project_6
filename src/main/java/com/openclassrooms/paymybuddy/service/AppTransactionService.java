@@ -1,6 +1,5 @@
 package com.openclassrooms.paymybuddy.service;
 
-import com.openclassrooms.paymybuddy.controller.AppAccountController;
 import com.openclassrooms.paymybuddy.model.AppTransaction;
 import com.openclassrooms.paymybuddy.model.Fees;
 import com.openclassrooms.paymybuddy.model.TransactionDTO;
