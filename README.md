@@ -3,7 +3,8 @@ OpenClassrooms Projet 6 - Pay My Buddy
 
 Diagramme de classe: 
 
-![Pay My Buddy - Diagramme de classe](https://user-images.githubusercontent.com/91942255/225117554-5e5010a2-1ec4-48b7-9c4e-0fafe0ca70f5.png)
+![Pay My Buddy - MCD (1)](https://user-images.githubusercontent.com/91942255/225966709-67e964c6-bd26-4013-9d75-60323c7f00ee.png)
+
 
 
 Modèle physique des données:
